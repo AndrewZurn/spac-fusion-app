@@ -1,4 +1,4 @@
-import * as CounterState from './CounterState';
+import * as HomeState from './HomeState';
 import * as NavigationState from '../../modules/navigation/NavigationState';
 import React, {PropTypes} from 'react';
 import {
@@ -9,7 +9,7 @@ import {
   View
 } from 'react-native';
 
-const CounterView = React.createClass({
+const HomeView = React.createClass({
   propTypes: {
     counter: PropTypes.number.isRequired,
     userName: PropTypes.string,
@@ -18,16 +18,16 @@ const CounterView = React.createClass({
     dispatch: PropTypes.func.isRequired
   },
   increment() {
-    this.props.dispatch(CounterState.increment());
+    this.props.dispatch(HomeState.increment());
   },
   reset() {
-    this.props.dispatch(CounterState.reset());
+    this.props.dispatch(HomeState.reset());
   },
   random() {
-    this.props.dispatch(CounterState.random());
+    this.props.dispatch(HomeState.random());
   },
   bored() {
-    this.props.dispatch(NavigationState.pushRoute({key: 'Color'}));
+    this.props.dispatch(NavigationState.pushRoute({key: 'Workout'}));
   },
 
   renderUserInfo() {
@@ -140,4 +140,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CounterView;
+export default HomeView;

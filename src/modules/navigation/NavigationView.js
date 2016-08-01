@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
 import {
   View,
-  StyleSheet
+  StyleSheet,
+  StatusBar
 } from 'react-native';
 import AppRouter from '../AppRouter';
 import NavigationTabView from './NavigationTabView';
@@ -35,6 +36,7 @@ const NavigationView = React.createClass({
 
     return (
       <View style={styles.container}>
+        <StatusBar barStyle="light-content"/>
         {tabs}
         <TabBar
           height={TAB_BAR_HEIGHT}

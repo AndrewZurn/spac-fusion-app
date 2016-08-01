@@ -34,8 +34,10 @@ export function navigationCompleted() {
 
 const initialState = fromJS(
   createNavigationState('MainNavigation', 'App', [
-    createNavigationState('HomeTab', 'Home', [{key: 'Counter', title: 'Counter'}]),
-    createNavigationState('ProfileTab', 'Profile', [{key: 'Color', title: 'Color'}])
+    createNavigationState('HomeTab', 'Home', [{key: 'Home', title: 'Home'}]),
+    createNavigationState('WorkoutTab', 'Workout', [{key: 'Workout', title: 'Workout'}]),
+    createNavigationState('CalendarTab', 'Calendar', [{key: 'Calendar', title: 'Calendar'}]),
+    createNavigationState('ProfileTab', 'Profile', [{key: 'Profile', title: 'Profile'}])
   ]));
 
 export default function NavigationReducer(state = initialState, action) {

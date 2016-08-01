@@ -9,10 +9,10 @@ const initialState = Map({
 });
 
 // Actions
-const INCREMENT = 'CounterState/INCREMENT';
-const RESET = 'CounterState/RESET';
-const RANDOM_REQUEST = 'CounterState/RANDOM_REQUEST';
-const RANDOM_RESPONSE = 'CounterState/RANDOM_RESPONSE';
+const INCREMENT = 'HomeState/INCREMENT';
+const RESET = 'HomeState/RESET';
+const RANDOM_REQUEST = 'HomeState/RANDOM_REQUEST';
+const RANDOM_RESPONSE = 'HomeState/RANDOM_RESPONSE';
 
 // Action creators
 export function increment() {
@@ -37,7 +37,7 @@ export async function requestRandomNumber() {
 }
 
 // Reducer
-export default function CounterStateReducer(state = initialState, action = {}) {
+export default function HomeStateReducer(state = initialState, action = {}) {
   switch (action.type) {
     case INCREMENT:
       return state.update('value', value => value + 1);

@@ -4,5 +4,6 @@
 
 module.exports = {
   AUTH0_CLIENT_ID: '',
-  AUTH0_DOMAIN: ''
+  AUTH0_DOMAIN: '',
+  ENVIRONMENT: 'local'
 };
