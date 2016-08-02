@@ -2,7 +2,7 @@
 
 import React from 'react';
 import HomeViewContainer from './home/HomeViewContainer';
-import ColorViewContainer from './colors/ColorViewContainer';
+import WorkoutViewContainer from './colors/WorkoutViewContainer';
 
 /**
  * AppRouter is responsible for mapping a navigator scene to a view
@@ -17,7 +17,7 @@ export default function AppRouter(props) {
   if (key.indexOf('Workout') === 0) {
     const index = props.scenes.indexOf(props.scene);
     return (
-      <ColorViewContainer
+      <WorkoutViewContainer
         index={index}
       />
     );
@@ -26,7 +26,7 @@ export default function AppRouter(props) {
   if (key.indexOf('Calendar') === 0) {
     const index = props.scenes.indexOf(props.scene);
     return (
-        <ColorViewContainer
+        <WorkoutViewContainer
             index={index}
         />
     );
@@ -35,7 +35,7 @@ export default function AppRouter(props) {
   if (key.indexOf('Profile') === 0) {
     const index = props.scenes.indexOf(props.scene);
     return (
-        <ColorViewContainer
+        <WorkoutViewContainer
             index={index}
         />
     );

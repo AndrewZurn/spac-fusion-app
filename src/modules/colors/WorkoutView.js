@@ -13,7 +13,7 @@ const color = () => Math.floor(255 * Math.random());
  * Sample view to demonstrate navigation patterns.
  * @TODO remove this module in a live application.
  */
-const ColorView = React.createClass({
+const WorkoutView = React.createClass({
   propTypes: {
     index: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ColorView;
+export default WorkoutView;
