@@ -13,7 +13,7 @@ const color = () => Math.floor(255 * Math.random());
  * Sample view to demonstrate navigation patterns.
  * @TODO remove this module in a live application.
  */
-const WorkoutView = React.createClass({
+const ProfileView = React.createClass({
   propTypes: {
     index: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired
@@ -33,7 +33,7 @@ const WorkoutView = React.createClass({
   render() {
 
     const index = this.props.index;
-    const text = `View #${index}`;
+    const text = `Profile View`;
     return (
       <View style={[styles.container, {backgroundColor: this.state.background}]}>
         <Text onPress={this.onNextPress}>
@@ -52,4 +52,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default WorkoutView;
+export default ProfileView;
