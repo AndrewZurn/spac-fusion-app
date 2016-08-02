@@ -17,6 +17,10 @@ const FAILING_ENDPOINT = '/broken';
 const SIMPLE_RESPONSE = {foo: 'bar'};
 
 describe('API', () => {
+
+  let spySimpleEndpointSent;
+  let spySimpleEndpointFinished;
+
   beforeEach(() => {
     configuration.setConfiguration('API_ROOT', API_ROOT);
     fetch
@@ -24,11 +28,15 @@ describe('API', () => {
       .mock(API_ROOT + ERROR_ENDPOINT, {status: 400,body: {message: 'You did bad.'}})
       .mock(API_ROOT + PROTECTED_ENDPOINT, {status: 403})
       .mock(API_ROOT + FAILING_ENDPOINT, {status: 500}); // don't specify body to test default message
+    api.xhrRequests.on(api.xhrSentTopic(SIMPLE_ENDPOINT), (spySimpleEndpointSent = sinon.spy()));
+    api.xhrRequests.on(api.xhrFinishedTopic(SIMPLE_ENDPOINT), (spySimpleEndpointFinished = sinon.spy()));
   });
 
   afterEach(() => {
     fetch.restore();
     configuration.unsetConfiguration('API_ROOT');
+    api.xhrRequests.off(api.xhrSentTopic(SIMPLE_ENDPOINT), spySimpleEndpointSent);
+    api.xhrRequests.off(api.xhrFinishedTopic(SIMPLE_ENDPOINT), spySimpleEndpointFinished);
   });
 
   // generate basic tests for basic HTTP methods
@@ -44,8 +52,13 @@ describe('API', () => {
     describe(method, () => {
 
       it('should fetch() the given endpoint', async () => {
+        let expectedEventArg = {path: SIMPLE_ENDPOINT, status: 200, body};
+
         await apiMethod(SIMPLE_ENDPOINT);
+
         expect(fetch.lastUrl()).to.equal(`${API_ROOT}${SIMPLE_ENDPOINT}`);
+        expect(spySimpleEndpointSent.callCount).to.equal(1);
+        expect(spySimpleEndpointFinished.calledWith(expectedEventArg)).to.equal(true);
       });
 
       if (method === 'put' || method === 'post') {
@@ -93,8 +106,11 @@ describe('API', () => {
     let spy400Errors;
     let spy403Errors;
     let spyAllErrors;
+    let spyProtectedEndpointSent;
+    let spyProtectedEndpointFinished;
     const expectedArgs = {
       path: PROTECTED_ENDPOINT,
+      status: 403,
       message: 'Forbidden'
     };
 
@@ -102,12 +118,16 @@ describe('API', () => {
       api.errors.on('400', (spy400Errors = sinon.spy()));
       api.errors.on('403', (spy403Errors = sinon.spy()));
       api.errors.on('*', (spyAllErrors = sinon.spy()));
+      api.xhrRequests.on(api.xhrSentTopic(PROTECTED_ENDPOINT), (spyProtectedEndpointSent = sinon.spy()));
+      api.xhrRequests.on(api.xhrFinishedTopic(PROTECTED_ENDPOINT), (spyProtectedEndpointFinished = sinon.spy()));
     });
 
     afterEach(() => {
       api.errors.off('400', spy400Errors);
       api.errors.off('403', spy403Errors);
       api.errors.off('*', spyAllErrors);
+      api.xhrRequests.off(api.xhrSentTopic(PROTECTED_ENDPOINT), spyProtectedEndpointSent);
+      api.xhrRequests.off(api.xhrFinishedTopic(PROTECTED_ENDPOINT), spyProtectedEndpointFinished);
     });
 
     it('notifies about errors on error-specific channel', async () => {
@@ -116,6 +136,8 @@ describe('API', () => {
       // 403 called, matching error code
       expect(spy403Errors.callCount).to.equal(1);
       expect(spy403Errors.calledWith(expectedArgs)).to.equal(true);
+      expect(spyProtectedEndpointSent.callCount).to.equal(1);
+      expect(spyProtectedEndpointFinished.calledWith(expectedArgs)).to.equal(true);
     });
 
     it('notifies about errors on generic * channel', async () => {
