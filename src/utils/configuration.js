@@ -2,24 +2,27 @@ import {Map} from 'immutable';
 import * as env from '../../env';
 
 let baseConfig = {
-  'USERS_PATH': '/users',
-  'EXERCISES_PATH': '/exercises',
-  'WORKOUTS_PATH': '/workouts'
+  USERS_PATH: '/users',
+  EXERCISES_PATH: '/exercises',
+  WORKOUTS_PATH: '/workouts'
 };
 
 let localConfig = Map({
   ...baseConfig,
-  'API_ROOT': 'http://localhost:8080'
+  API_FAILED_REQUEST_WARNING_MESSAGE: true,
+  API_ROOT: 'http://localhost:8080'
 });
 
 let testConfig = Map({
   ...baseConfig,
-  'API_ROOT': 'http://SOME_TEST_HOST:8080'
+  API_FAILED_REQUEST_WARNING_MESSAGE: true,
+  API_ROOT: 'http://SOME_TEST_HOST:8080'
 });
 
 let prodConfig = Map({
   ...baseConfig,
-  'API_ROOT': 'http://SOME_PROD_HOST:8080'
+  API_FAILED_REQUEST_WARNING_MESSAGE: false,
+  API_ROOT: 'http://SOME_PROD_HOST:8080'
 });
 
 let configuration = getConfig();

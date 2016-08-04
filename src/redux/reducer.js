@@ -3,6 +3,7 @@ import {combineReducers} from 'redux-loop';
 import NavigationStateReducer from '../modules/navigation/NavigationState';
 import AuthStateReducer from '../modules/auth/AuthState';
 import HomeStateReducer from '../modules/home/HomeState';
+import WorkoutStateReducer from '../modules/workout/WorkoutState';
 import SessionStateReducer, {RESET_STATE} from '../modules/session/SessionState';
 
 const reducers = {
@@ -16,8 +17,10 @@ const reducers = {
   //`navigationState`
   navigationState: NavigationStateReducer,
 
-  session: SessionStateReducer
+  // Workout view app statue
+  workoutState: WorkoutStateReducer,
 
+  session: SessionStateReducer
 };
 
 // initial state, accessor and mutator for supporting root-level

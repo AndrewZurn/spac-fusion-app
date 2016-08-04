@@ -28,10 +28,10 @@ export const xhrRequests = new EventEmitter();
  * GET a path relative to API root url.
  * @param {String}  path Relative path to the configured API endpoint
  * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
- * @returns {Promise} of response body
+ * @returns {Promise} of response
  */
 export async function get(path, suppressRedBox) {
-  return bodyOf(request('get', path, null, suppressRedBox));
+  return request('get', path, null, suppressRedBox);
 }
 
 /**
@@ -39,10 +39,10 @@ export async function get(path, suppressRedBox) {
  * @param {String} path Relative path to the configured API endpoint
  * @param {Object} body Anything that you can pass to JSON.stringify
  * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
- * @returns {Promise}  of response body
+ * @returns {Promise}  of response
  */
 export async function post(path, body, suppressRedBox) {
-  return bodyOf(request('post', path, body, suppressRedBox));
+  return request('post', path, body, suppressRedBox);
 }
 
 /**
@@ -50,20 +50,20 @@ export async function post(path, body, suppressRedBox) {
  * @param {String} path Relative path to the configured API endpoint
  * @param {Object} body Anything that you can pass to JSON.stringify
  * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
- * @returns {Promise}  of response body
+ * @returns {Promise}  of response
  */
 export async function put(path, body, suppressRedBox) {
-  return bodyOf(request('put', path, body, suppressRedBox));
+  return request('put', path, body, suppressRedBox);
 }
 
 /**
  * DELETE a path relative to API root url
  * @param {String} path Relative path to the configured API endpoint
  * @param {Boolean} suppressRedBox If true, no warning is shown on failed request
- * @returns {Promise}  of response body
+ * @returns {Promise}  of response
  */
 export async function del(path, suppressRedBox) {
-  return bodyOf(request('delete', path, null, suppressRedBox));
+  return request('delete', path, null, suppressRedBox);
 }
 
 /**
@@ -103,7 +103,7 @@ export function url(path) {
  * Constructs and fires a HTTP request
  */
 async function sendRequest(method, path, body) {
-
+  console.log(`Requesting ${method} - ${path}`);
   try {
     const endpoint = url(path);
     const token = await getAuthenticationToken();
@@ -124,6 +124,7 @@ async function sendRequest(method, path, body) {
  * Receives and reads a HTTP response
  */
 async function handleResponse(path, response) {
+  console.log(`Response ${response.status} - ${path}`);
   try {
     const status = response.status;
 
@@ -207,15 +208,6 @@ function timeout(promise, ms) {
       })
       .catch(reject);
   });
-}
-
-async function bodyOf(requestPromise) {
-  try {
-    const response = await requestPromise;
-    return response.body;
-  } catch (e) {
-    throw e;
-  }
 }
 
 /**

@@ -68,8 +68,9 @@ describe('API', () => {
         });
       }
 
-      it('should return the response body when calling a valid JSON endpoint', async () => {
-        expect(await apiMethod(SIMPLE_ENDPOINT)).to.eql(SIMPLE_RESPONSE);
+      it('should return the response when calling a valid JSON endpoint', async () => {
+        const result = await apiMethod(SIMPLE_ENDPOINT);
+        expect(result.body).to.eql(SIMPLE_RESPONSE);
         expect(fetch.called()).to.equal(true);
       });
 

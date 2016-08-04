@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 
 import * as NavigationState from '../../modules/navigation/NavigationState';
+import '../../services/workoutService';
 
 const color = () => Math.floor(255 * Math.random());
 
@@ -21,7 +22,7 @@ const CalendarView = React.createClass({
 
   getInitialState() {
     return {
-      background: `rgba(${color()},${color()},${color()}, 1)`
+
     };
   },
 
@@ -35,7 +36,7 @@ const CalendarView = React.createClass({
     const index = this.props.index;
     const text = `Calendar View`;
     return (
-      <View style={[styles.container, {backgroundColor: this.state.background}]}>
+      <View style={styles.container}>
         <Text onPress={this.onNextPress}>
           {text}
         </Text>
@@ -48,7 +49,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'white'
   }
 });
 

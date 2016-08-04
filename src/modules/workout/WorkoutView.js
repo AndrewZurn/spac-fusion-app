@@ -1,3 +1,4 @@
+import * as WorkoutState from './WorkoutState';
 import React, {PropTypes} from 'react';
 import {
   Text,
@@ -5,40 +6,28 @@ import {
   StyleSheet
 } from 'react-native';
 
-import * as NavigationState from '../../modules/navigation/NavigationState';
-
-const color = () => Math.floor(255 * Math.random());
-
 /**
  * Sample view to demonstrate navigation patterns.
  * @TODO remove this module in a live application.
  */
 const WorkoutView = React.createClass({
   propTypes: {
-    index: PropTypes.number.isRequired,
+    exercises: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired
   },
-
-  getInitialState() {
-    return {
-      background: `rgba(${color()},${color()},${color()}, 1)`
-    };
-  },
-
-  onNextPress() {
-    const index = this.props.index;
-    this.props.dispatch(NavigationState.pushRoute({key: `Workout_${index + 1}`}));
+  getWorkouts() {
+    this.props.dispatch(WorkoutState.getWorkouts());
   },
 
   render() {
-
-    const index = this.props.index;
     const text = `Workout View`;
+    const exercises = this.props.exercises;
     return (
-      <View style={[styles.container, {backgroundColor: this.state.background}]}>
-        <Text onPress={this.onNextPress}>
+      <View style={styles.container}>
+        <Text onPress={this.getWorkouts}>
           {text}
         </Text>
+        <Text>{JSON.stringify(exercises)}</Text>
       </View>
     );
   }
@@ -48,7 +37,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'white'
   }
 });
 
