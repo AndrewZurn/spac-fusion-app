@@ -49,11 +49,11 @@ export function getConfiguration(key) {
 
 function getConfig() {
   let environment = env.ENVIRONMENT;
-  if (environment == 'prod') {
+  if (environment === 'prod') {
     return prodConfig;
-  } else if (environment == 'test') {
+  } else if (environment === 'test') {
     return testConfig;
-  } else if (environment == 'local') {
+  } else if (environment === 'local') {
     return localConfig;
   } else {
     throw new Error('Undefined configuration key: ENVIRONMENT in current environment config file.');

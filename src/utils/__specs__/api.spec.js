@@ -49,9 +49,11 @@ describe('API', () => {
       ? path => api[method](path, body)
       : path => api[method](path);
 
+    /*eslint-disable */
     describe(method, () => {
+    /*eslint-enable */
 
-      it('should fetch() the given endpoint', async () => {
+      it('should fetch() the given endpoint', async() => {
         let expectedEventArg = {path: SIMPLE_ENDPOINT, status: 200, body};
 
         await apiMethod(SIMPLE_ENDPOINT);
@@ -62,19 +64,19 @@ describe('API', () => {
       });
 
       if (method === 'put' || method === 'post') {
-        it('should send the body for PUT and POST requests', async () => {
+        it('should send the body for PUT and POST requests', async() => {
           await apiMethod(SIMPLE_ENDPOINT);
           expect(fetch.lastOptions().body).to.equal(JSON.stringify(body));
         });
       }
 
-      it('should return the response when calling a valid JSON endpoint', async () => {
+      it('should return the response when calling a valid JSON endpoint', async() => {
         const result = await apiMethod(SIMPLE_ENDPOINT);
         expect(result.body).to.eql(SIMPLE_RESPONSE);
         expect(fetch.called()).to.equal(true);
       });
 
-      it('should throw when endpoint returns HTTP 4xx error', async () => {
+      it('should throw when endpoint returns HTTP 4xx error', async() => {
         const error = await getError(() => apiMethod(ERROR_ENDPOINT));
         expect(error).to.be.an.instanceOf(HttpError);
         expect(error.code).to.equal(400);
@@ -82,7 +84,7 @@ describe('API', () => {
         expect(fetch.called()).to.equal(true);
       });
 
-      it('should throw when server returns a HTTP 5xx error', async () => {
+      it('should throw when server returns a HTTP 5xx error', async() => {
         const error = await getError(() => apiMethod(FAILING_ENDPOINT));
         expect(error).to.be.an.instanceOf(HttpError);
         expect(error.code).to.equal(500);

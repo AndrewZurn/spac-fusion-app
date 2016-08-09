@@ -3,6 +3,8 @@ import WorkoutView from './WorkoutView';
 
 export default connect(
     state => ({
-      exercises: state.getIn(['workoutState', 'exercises'])
+      workouts: state.getIn(['workoutState', 'workouts']),
+      todaysWorkout: state.getIn(['workoutState', 'todaysWorkout']),
+      canUnlockWorkout: state.getIn(['workoutState', 'canUnlockWorkout'])
     })
 )(WorkoutView);

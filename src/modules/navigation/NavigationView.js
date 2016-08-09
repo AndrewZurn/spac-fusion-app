@@ -36,7 +36,7 @@ const NavigationView = React.createClass({
 
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="light-content"/>
+        <StatusBar barStyle='light-content'/>
         {tabs}
         <TabBar
           height={TAB_BAR_HEIGHT}

@@ -17,7 +17,6 @@ export default function AppRouter(props) {
   }
 
   if (key.indexOf('Workout') === 0) {
-    const index = props.scenes.indexOf(props.scene);
     return (
       <WorkoutViewContainer />
     );

@@ -6,9 +6,7 @@ import {
 } from 'react-native';
 
 import * as NavigationState from '../../modules/navigation/NavigationState';
-import * as ProfileState from './ProfileState';
-
-const color = () => Math.floor(255 * Math.random());
+//import * as ProfileState from './ProfileState';
 
 /**
  * Sample view to demonstrate navigation patterns.
@@ -32,9 +30,7 @@ const ProfileView = React.createClass({
   },
 
   render() {
-
-    const index = this.props.index;
-    const text = `Profile View`;
+    const text = 'Profile View';
     return (
       <View style={styles.container}>
         <Text onPress={this.onNextPress}>

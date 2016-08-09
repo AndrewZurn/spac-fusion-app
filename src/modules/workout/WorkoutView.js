@@ -1,10 +1,15 @@
-import * as WorkoutState from './WorkoutState';
 import React, {PropTypes} from 'react';
 import {
   Text,
   View,
   StyleSheet
 } from 'react-native';
+import { Card, Button } from 'react-native-material-design';
+import * as WorkoutState from './WorkoutState';
+import Colors from '../../utils/colors';
+
+// TODO: REMOVE ME WHEN HOOKED UP WITH AUTH
+const TEST_USER_ID = 'ba729f5c-9781-4d88-bca7-f5098930eff7';
 
 /**
  * Sample view to demonstrate navigation patterns.
@@ -12,22 +17,42 @@ import {
  */
 const WorkoutView = React.createClass({
   propTypes: {
-    exercises: PropTypes.array.isRequired,
+    todaysWorkout: PropTypes.object.isRequired,
+    canUnlockWorkout: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   },
-  getWorkouts() {
-    this.props.dispatch(WorkoutState.getWorkouts());
+  getTodaysWorkout() {
+    this.props.dispatch(WorkoutState.getTodaysWorkout());
+  },
+  canUnlockWorkout() {
+    this.props.dispatch(WorkoutState.canUnlockWorkout(TEST_USER_ID));
+  },
+  setupForWorkout() {
+    this.getTodaysWorkout();
+    this.canUnlockWorkout(TEST_USER_ID);
   },
 
   render() {
-    const text = `Workout View`;
-    const exercises = this.props.exercises;
+    const todaysWorkout = this.props.todaysWorkout;
+    const exercise = todaysWorkout.exercise;
+
+    let exerciseName;
+    if (exercise && exercise.name) { exerciseName = exercise.name; } else { exerciseName = ''; }
+
+    let duration;
+    if (todaysWorkout.duration) { duration = todaysWorkout.duration; } else { duration = ''; }
+
     return (
-      <View style={styles.container}>
-        <Text onPress={this.getWorkouts}>
-          {text}
-        </Text>
-        <Text>{JSON.stringify(exercises)}</Text>
+      <View style={styles.container} onLayout={this.setupForWorkout}>
+        <Card style={styles.card}>
+          <Card.Body>
+            <Text style={styles.workoutTitle}>{exerciseName}</Text>
+            <Text style={styles.text}>Duration: {duration}</Text>
+          </Card.Body>
+          <Card.Actions position="right">
+            <Button text="Start Workout" />
+          </Card.Actions>
+        </Card>
       </View>
     );
   }
@@ -38,7 +63,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: Colors.spacMediumGray,
+  },
+  card: {
+    backgroundColor: Colors.spacLightGray
+  },
+  workoutTitle: {
+    justifyContent: 'center',
+    fontSize: 19,
+    fontWeight: 'bold',
+    color: Colors.spacCream
+  },
+  text: {
+    fontSize: 16,
+    color: Colors.spacCream
   }
 });
 

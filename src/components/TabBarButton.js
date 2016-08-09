@@ -4,7 +4,7 @@ import {
   TouchableOpacity,
   StyleSheet
 } from 'react-native';
-import Colors from "../utils/colors";
+import Colors from '../utils/colors';
 
 export default React.createClass({
   displayName: 'TabBarButton',
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.spacGray,
+    backgroundColor: Colors.spacGray
   },
   selected: {
     backgroundColor: Colors.spacGold

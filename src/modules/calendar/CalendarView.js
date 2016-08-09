@@ -8,8 +8,6 @@ import {
 import * as NavigationState from '../../modules/navigation/NavigationState';
 import '../../services/workoutService';
 
-const color = () => Math.floor(255 * Math.random());
-
 /**
  * Sample view to demonstrate navigation patterns.
  * @TODO remove this module in a live application.
@@ -32,9 +30,7 @@ const CalendarView = React.createClass({
   },
 
   render() {
-
-    const index = this.props.index;
-    const text = `Calendar View`;
+    const text = 'Calendar View';
     return (
       <View style={styles.container}>
         <Text onPress={this.onNextPress}>

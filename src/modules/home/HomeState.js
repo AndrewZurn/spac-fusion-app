@@ -16,15 +16,15 @@ const RANDOM_RESPONSE = 'HomeState/RANDOM_RESPONSE';
 
 // Action creators
 export function increment() {
-  return { type: INCREMENT };
+  return {type: INCREMENT};
 }
 
 export function reset() {
-  return { type: RESET };
+  return {type: RESET};
 }
 
 export function random() {
-  return { type: RANDOM_REQUEST };
+  return {type: RANDOM_REQUEST};
 }
 
 export async function requestRandomNumber() {
@@ -45,14 +45,14 @@ export default function HomeStateReducer(state = initialState, action = {}) {
 
     case RANDOM_REQUEST:
       return loop(
-        state.set('loading', true),
-        Effects.promise(requestRandomNumber)
+          state.set('loading', true),
+          Effects.promise(requestRandomNumber)
       );
 
     case RANDOM_RESPONSE:
       return state
-        .set('loading', false)
-        .set('value', action.payload);
+          .set('loading', false)
+          .set('value', action.payload);
 
     default:
       return state;

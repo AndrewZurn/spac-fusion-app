@@ -1,8 +1,8 @@
 import * as api from '../utils/api';
 import * as configuration from '../utils/configuration';
 
-const EXERCISES_BASE_PATH = configuration.getConfiguration("EXERCISES_PATH");
-const API_FAILED_REQUEST_WARNING = configuration.getConfiguration("API_FAILED_REQUEST_WARNING_MESSAGE");
+const EXERCISES_BASE_PATH = configuration.getConfiguration('EXERCISES_PATH');
+const API_FAILED_REQUEST_WARNING = configuration.getConfiguration('API_FAILED_REQUEST_WARNING_MESSAGE');
 
 export async function getExercises() {
   return api.get(EXERCISES_BASE_PATH, API_FAILED_REQUEST_WARNING);

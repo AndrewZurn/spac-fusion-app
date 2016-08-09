@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import {
     Animated,
-    NavigationHeader,
-    NavigationHeaderTitle,
+    //NavigationHeader,
+    //NavigationHeaderTitle,
     NavigationExperimental as Navigation,
-    StyleSheet,
-    Text
+    //Text,
+    StyleSheet
 } from 'react-native';
-import Colors from "../../utils/colors"
+import Colors from '../../utils/colors';
 const {Platform} = require('react-native');
 
 const NavigationTabView = React.createClass({
@@ -30,10 +30,11 @@ const NavigationTabView = React.createClass({
             style={{backgroundColor: Colors.spacGray}}
             onNavigateBack={this.props.onNavigateBack}
             getTitle={state => state.key}
-            renderTitleComponent={props => {
+            renderTitleComponent={() => {
               return <Navigation.Header.Title textStyle={styles.titleText}>
                 {props.scene.route.key}
-              </Navigation.Header.Title>}
+              </Navigation.Header.Title>;
+            }
             }
         />
     );
