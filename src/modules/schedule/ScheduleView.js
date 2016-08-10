@@ -1,10 +1,12 @@
 import React, {PropTypes} from 'react';
 import {
-  Text,
+  ScrollView,
   View,
   StyleSheet
 } from 'react-native';
 import * as ScheduleState from './ScheduleState';
+import WorkoutCard from '../../components/WorkoutCard';
+import Colors from '../../utils/colors';
 
 /**
  * Sample view to demonstrate navigation patterns.
@@ -20,11 +22,19 @@ const ScheduleView = React.createClass({
   },
 
   render() {
+    let workoutCard = this.props.workouts.map((workout, index) => {
+      return <WorkoutCard
+                key={'workout-card-' + index}
+                workout={workout}
+                displayDay={true}
+                displayButton={false}/>;
+    });
+
     return (
       <View style={styles.container} onLayout={this.getWeeksRemainingWorkouts}>
-        <Text>
-          {JSON.stringify(this.props.workouts[0])}
-        </Text>
+        <ScrollView ref='scrollView' keyboardDismissMode='interactive' style={styles.scrollView} contentContainerStyle={styles.contentContainerStyle}>
+          {workoutCard}
+        </ScrollView>
       </View>
     );
   }
@@ -33,9 +43,7 @@ const ScheduleView = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: Colors.spacMediumGray
   }
 });
 

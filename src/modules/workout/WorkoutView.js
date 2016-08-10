@@ -4,9 +4,10 @@ import {
   View,
   StyleSheet
 } from 'react-native';
-import { Card, Button } from 'react-native-material-design';
+import {Card, Button} from 'react-native-material-design';
 import * as WorkoutState from './WorkoutState';
 import Colors from '../../utils/colors';
+import WorkoutCard from '../../components/WorkoutCard';
 
 // TODO: REMOVE ME WHEN HOOKED UP WITH AUTH
 const TEST_USER_ID = 'ba729f5c-9781-4d88-bca7-f5098930eff7';
@@ -33,43 +34,17 @@ const WorkoutView = React.createClass({
   },
 
   render() {
-    const todaysWorkout = this.props.todaysWorkout;
-
-    let exerciseName = '';
-    let description = '';
-    let exerciseOptions = [];
-    if (todaysWorkout && todaysWorkout.exercise) {
-      if (todaysWorkout.exercise.name) {
-        exerciseName = todaysWorkout.exercise.name;
-      }
-
-      if (todaysWorkout.exercise.description) {
-        description = todaysWorkout.exercise.description;
-      }
-
-      if (todaysWorkout.exercise.exerciseOptions) {
-        exerciseOptions = todaysWorkout.exercise.exerciseOptions;
-      }
-    }
-
-    let duration = '';
-    if (todaysWorkout && todaysWorkout.duration) { duration = todaysWorkout.duration; }
+    const workoutCard = (
+      <WorkoutCard workout={this.props.todaysWorkout}
+                   displayDay={false}
+                   displayButton={true}
+                   displayButtonText={'Start Workout'}
+                   buttonAction={() => console.log('I\'m Working!!!')}/>
+    );
 
     return (
       <View style={styles.container} onLayout={this.setupForWorkout}>
-        <Card style={styles.card}>
-          <Card.Body>
-            <Text style={styles.workoutTitle}>{exerciseName}</Text>
-            <Text style={styles.text}>Duration: {duration}</Text>
-            <Text style={styles.text}>Description: {description}</Text>
-            <Text style={styles.text}>Exercises: {exerciseOptions.map(option => option.name)}</Text>
-          </Card.Body>
-          <Card.Actions position='right'>
-            <Button text='Start Workout' onPress={() => {
-              return console.log('I\'m DOING IT');
-            } }/>
-          </Card.Actions>
-        </Card>
+        {workoutCard}
       </View>
     );
   }
@@ -80,21 +55,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.spacMediumGray,
-  },
-  card: {
-    backgroundColor: Colors.spacLightGray
-  },
-  workoutTitle: {
-    justifyContent: 'center',
-    fontSize: 19,
-    fontWeight: 'bold',
-    color: Colors.spacGold,
-    paddingBottom: 5
-  },
-  text: {
-    fontSize: 16,
-    color: Colors.spacCream
+    backgroundColor: Colors.spacMediumGray
   }
 });
 
