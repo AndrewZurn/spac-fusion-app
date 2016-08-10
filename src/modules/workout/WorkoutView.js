@@ -34,13 +34,26 @@ const WorkoutView = React.createClass({
 
   render() {
     const todaysWorkout = this.props.todaysWorkout;
-    const exercise = todaysWorkout.exercise;
 
-    let exerciseName;
-    if (exercise && exercise.name) { exerciseName = exercise.name; } else { exerciseName = ''; }
+    let exerciseName = '';
+    let description = '';
+    let exerciseOptions = [];
+    if (todaysWorkout && todaysWorkout.exercise) {
+      if (todaysWorkout.exercise.name) {
+        exerciseName = todaysWorkout.exercise.name;
+      }
 
-    let duration;
-    if (todaysWorkout.duration) { duration = todaysWorkout.duration; } else { duration = ''; }
+      if (todaysWorkout.exercise.description) {
+        description = todaysWorkout.exercise.description;
+      }
+
+      if (todaysWorkout.exercise.exerciseOptions) {
+        exerciseOptions = todaysWorkout.exercise.exerciseOptions;
+      }
+    }
+
+    let duration = '';
+    if (todaysWorkout && todaysWorkout.duration) { duration = todaysWorkout.duration; }
 
     return (
       <View style={styles.container} onLayout={this.setupForWorkout}>
@@ -48,9 +61,13 @@ const WorkoutView = React.createClass({
           <Card.Body>
             <Text style={styles.workoutTitle}>{exerciseName}</Text>
             <Text style={styles.text}>Duration: {duration}</Text>
+            <Text style={styles.text}>Description: {description}</Text>
+            <Text style={styles.text}>Exercises: {exerciseOptions.map(option => option.name)}</Text>
           </Card.Body>
-          <Card.Actions position="right">
-            <Button text="Start Workout" />
+          <Card.Actions position='right'>
+            <Button text='Start Workout' onPress={() => {
+              return console.log('I\'m DOING IT');
+            } }/>
           </Card.Actions>
         </Card>
       </View>
@@ -72,7 +89,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     fontSize: 19,
     fontWeight: 'bold',
-    color: Colors.spacCream
+    color: Colors.spacGold,
+    paddingBottom: 5
   },
   text: {
     fontSize: 16,

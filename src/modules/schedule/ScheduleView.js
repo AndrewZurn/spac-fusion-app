@@ -12,7 +12,7 @@ import '../../services/workoutService';
  * Sample view to demonstrate navigation patterns.
  * @TODO remove this module in a live application.
  */
-const CalendarView = React.createClass({
+const ScheduleView = React.createClass({
   propTypes: {
     index: PropTypes.number.isRequired,
     dispatch: PropTypes.func.isRequired
@@ -30,7 +30,7 @@ const CalendarView = React.createClass({
   },
 
   render() {
-    const text = 'Calendar View';
+    const text = 'Schedule View';
     return (
       <View style={styles.container}>
         <Text onPress={this.onNextPress}>
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CalendarView;
+export default ScheduleView;

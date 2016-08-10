@@ -36,7 +36,7 @@ const initialState = fromJS(
   createNavigationState('MainNavigation', 'App', [
     createNavigationState('HomeTab', 'Home', [{key: 'Home', title: 'Home'}]),
     createNavigationState('WorkoutTab', 'Workout', [{key: 'Workout', title: 'Workout'}]),
-    createNavigationState('CalendarTab', 'Calendar', [{key: 'Calendar', title: 'Calendar'}]),
+    createNavigationState('ScheduleTab', 'Schedule', [{key: 'Schedule', title: 'Schedule'}]),
     createNavigationState('ProfileTab', 'Profile', [{key: 'Profile', title: 'Profile'}])
   ]));
 

@@ -3,7 +3,7 @@
 import React from 'react';
 import HomeViewContainer from './home/HomeViewContainer';
 import WorkoutViewContainer from './workout/WorkoutViewContainer';
-import CalendarViewContainer from './calendar/CalendarViewContainer';
+import ScheduleViewContainer from './schedule/ScheduleViewContainer';
 import ProfileViewContainer from './profile/ProfileViewContainer';
 
 /**
@@ -22,10 +22,10 @@ export default function AppRouter(props) {
     );
   }
 
-  if (key.indexOf('Calendar') === 0) {
+  if (key.indexOf('Schedule') === 0) {
     const index = props.scenes.indexOf(props.scene);
     return (
-        <CalendarViewContainer index={index} />
+        <ScheduleViewContainer index={index} />
     );
   }
 
