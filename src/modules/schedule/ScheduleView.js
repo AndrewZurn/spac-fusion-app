@@ -4,9 +4,7 @@ import {
   View,
   StyleSheet
 } from 'react-native';
-
-import * as NavigationState from '../../modules/navigation/NavigationState';
-import '../../services/workoutService';
+import * as ScheduleState from './ScheduleState';
 
 /**
  * Sample view to demonstrate navigation patterns.
@@ -14,27 +12,18 @@ import '../../services/workoutService';
  */
 const ScheduleView = React.createClass({
   propTypes: {
-    index: PropTypes.number.isRequired,
+    workouts: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired
   },
-
-  getInitialState() {
-    return {
-
-    };
-  },
-
-  onNextPress() {
-    const index = this.props.index;
-    this.props.dispatch(NavigationState.pushRoute({key: `Workout_${index + 1}`}));
+  getWeeksRemainingWorkouts() {
+    this.props.dispatch(ScheduleState.getWeeksRemainingWorkouts());
   },
 
   render() {
-    const text = 'Schedule View';
     return (
-      <View style={styles.container}>
-        <Text onPress={this.onNextPress}>
-          {text}
+      <View style={styles.container} onLayout={this.getWeeksRemainingWorkouts}>
+        <Text>
+          {JSON.stringify(this.props.workouts[0])}
         </Text>
       </View>
     );

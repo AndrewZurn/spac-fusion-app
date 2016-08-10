@@ -4,6 +4,7 @@ import NavigationStateReducer from '../modules/navigation/NavigationState';
 import AuthStateReducer from '../modules/auth/AuthState';
 import HomeStateReducer from '../modules/home/HomeState';
 import WorkoutStateReducer from '../modules/workout/WorkoutState';
+import ScheduleStateReducer from '../modules/schedule/ScheduleState';
 import SessionStateReducer, {RESET_STATE} from '../modules/session/SessionState';
 
 const reducers = {
@@ -19,6 +20,9 @@ const reducers = {
 
   // Workout view app statue
   workoutState: WorkoutStateReducer,
+
+  // Schedule view app statue
+  scheduleState: ScheduleStateReducer,
 
   session: SessionStateReducer
 };
