@@ -2,7 +2,8 @@ import React, {PropTypes} from 'react';
 import {
   ScrollView,
   View,
-  StyleSheet
+  StyleSheet,
+  Text
 } from 'react-native';
 import * as ScheduleState from './ScheduleState';
 import WorkoutCard from '../../components/WorkoutCard';
@@ -30,9 +31,18 @@ const ScheduleView = React.createClass({
                 displayButton={false}/>;
     });
 
+    let remainingWorkoutsText = '';
+    let remainingWorkoutsCount = this.props.workouts.length;
+    if (remainingWorkoutsCount > 0) {
+      remainingWorkoutsText = `Remaining Workouts this Week: ${remainingWorkoutsCount}`;
+    }
+
     return (
       <View style={styles.container} onLayout={this.getWeeksRemainingWorkouts}>
-        <ScrollView ref='scrollView' keyboardDismissMode='interactive' style={styles.scrollView} contentContainerStyle={styles.contentContainerStyle}>
+        <Text style={styles.remainingWorkoutsText}>{remainingWorkoutsText}</Text>
+        <ScrollView ref='scrollView'
+                    keyboardDismissMode='interactive'
+                    style={styles.scrollView}>
           {workoutCard}
         </ScrollView>
       </View>
@@ -43,7 +53,17 @@ const ScheduleView = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 70,
     backgroundColor: Colors.spacMediumGray
+  },
+  remainingWorkoutsText: {
+    fontSize: 16,
+    color: Colors.spacCream,
+    textAlign: 'center'
+  },
+  scrollView: {
+    flex: 1,
+    margin: 5
   }
 });
 
