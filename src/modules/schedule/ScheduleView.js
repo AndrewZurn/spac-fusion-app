@@ -28,7 +28,8 @@ const ScheduleView = React.createClass({
                 key={'workout-card-' + index}
                 workout={workout}
                 displayDay={true}
-                displayButton={false}/>;
+                displayButton={false}
+                extendedExerciseDescription={false}/>;
     });
 
     let remainingWorkoutsText = '';

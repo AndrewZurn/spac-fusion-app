@@ -8,12 +8,15 @@ import moment from 'moment';
 import {Card, Button} from 'react-native-material-design';
 import Colors from '../utils/colors';
 
+const NEW_LINE_TAB_CHARS = '\n\t - ';
+
 const WorkoutCard = React.createClass({
   displayName: 'WorkoutCard',
   propTypes: {
     workout: PropTypes.object.isRequired,
     displayDay: PropTypes.bool.isRequired,
     displayButton: PropTypes.bool.isRequired,
+    extendedExerciseDescription: PropTypes.bool.isRequired,
     displayButtonText: PropTypes.string,
     buttonAction: PropTypes.func
   },
@@ -23,7 +26,7 @@ const WorkoutCard = React.createClass({
 
     let exerciseNameText = '';
     let descriptionText = '';
-    let exerciseOptions = [];
+    let exerciseOptionsText = '';
     if (workout && workout.exercise) {
       if (workout.exercise.name) {
         exerciseNameText = workout.exercise.name;
@@ -34,7 +37,16 @@ const WorkoutCard = React.createClass({
       }
 
       if (workout.exercise.exerciseOptions) {
-        exerciseOptions = workout.exercise.exerciseOptions;
+        if (this.props.extendedExerciseDescription) {
+          descriptionText += '\n';
+
+          // if extended exercise description, drop exercise options onto new line and tab for each
+          exerciseOptionsText = NEW_LINE_TAB_CHARS + workout.exercise.exerciseOptions.map(option => {
+            return `${option.name} - ${option.targetAmount} ${option.type}`;
+          }).join(NEW_LINE_TAB_CHARS);
+        } else {
+          exerciseOptionsText = workout.exercise.exerciseOptions.map(option => option.name).join(', ');
+        }
       }
     }
 
@@ -63,7 +75,7 @@ const WorkoutCard = React.createClass({
               <Text style={styles.workoutTitle}>{exerciseNameText}</Text>
               <Text style={styles.text}>Duration: {durationText}</Text>
               <Text style={styles.text}>Description: {descriptionText}</Text>
-              <Text style={styles.text}>Exercises: {exerciseOptions.map(option => option.name).join(', ')}</Text>
+              <Text style={styles.text}>Exercises: {exerciseOptionsText}</Text>
             </Card.Body>
             {button}
           </Card>

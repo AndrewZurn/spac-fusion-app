@@ -1,10 +1,8 @@
 import React, {PropTypes} from 'react';
 import {
-  Text,
   View,
   StyleSheet
 } from 'react-native';
-import {Card, Button} from 'react-native-material-design';
 import * as WorkoutState from './WorkoutState';
 import Colors from '../../utils/colors';
 import WorkoutCard from '../../components/WorkoutCard';
@@ -37,6 +35,7 @@ const WorkoutView = React.createClass({
     const workoutCard = (
       <WorkoutCard workout={this.props.todaysWorkout}
                    displayDay={false}
+                   extendedExerciseDescription={true}
                    displayButton={true}
                    displayButtonText={'Start Workout'}
                    buttonAction={() => console.log('I\'m Working!!!')}/>
