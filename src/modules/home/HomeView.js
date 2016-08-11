@@ -1,142 +1,81 @@
-import * as HomeState from './HomeState';
-import * as NavigationState from '../../modules/navigation/NavigationState';
 import React, {PropTypes} from 'react';
 import {
-  StyleSheet,
-  TouchableOpacity,
+  Dimensions,
   Image,
+  StyleSheet,
   Text,
   View
 } from 'react-native';
+import {Card} from 'react-native-material-design';
+import Colors from '../../utils/colors';
+
+var width = Dimensions.get('window').width;
+var height = Dimensions.get('window').height;
 
 const HomeView = React.createClass({
   propTypes: {
-    counter: PropTypes.number.isRequired,
-    userName: PropTypes.string,
-    userProfilePhoto: PropTypes.string,
-    loading: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   },
-  increment() {
-    this.props.dispatch(HomeState.increment());
-  },
-  reset() {
-    this.props.dispatch(HomeState.reset());
-  },
-  random() {
-    this.props.dispatch(HomeState.random());
-  },
-  bored() {
-    this.props.dispatch(NavigationState.pushRoute({key: 'Workout'}));
-  },
 
-  renderUserInfo() {
-    if (!this.props.userName) {
-      return null;
-    }
-
-    return (
-      <View style={styles.userContainer}>
-        <Image
-          style={styles.userProfilePhoto}
-          source={{
-            uri: this.props.userProfilePhoto,
-            width: 80,
-            height: 80
-          }}
-        />
-        <Text style={styles.linkButton}>
-          Welcome, {this.props.userName}!
-        </Text>
-      </View>
-    );
-  },
   render() {
-    const loadingStyle = this.props.loading
-      ? {backgroundColor: '#eee'}
-      : null;
-
     return (
       <View style={styles.container}>
-
-        {this.renderUserInfo()}
-
-        <TouchableOpacity
-          onPress={this.increment}
-          style={[styles.counterButton, loadingStyle]}>
-          <Text style={styles.counter}>
-            {this.props.counter}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={this.reset}>
-          <Text style={styles.linkButton}>
-            Reset
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={this.random}>
-          <Text style={styles.linkButton}>
-            Random
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={this.bored} accessible={true}>
-          <Text style={styles.linkButton}>
-            {'I\'m bored!'}
-          </Text>
-        </TouchableOpacity>
-
+        <Card style={styles.card}>
+          <Card.Body>
+            <Image resizeMode='stretch'
+                   style={styles.stretch}
+                   source={require('../../img/fusion-by-spac-icon.jpeg')}/>
+            <Text style={styles.text}>
+              {'\n'}FUSION: Metabolic conditioning fusing together the best of function, full body strength,
+              and cardio training into one effective program.{'\n'}
+            </Text>
+            <Text style={styles.text}>
+              Make the most of every second you spend in the gym. Fusion is hard-core results backed by
+              hard-core science. Say goodbye to boredom with constant variation, strategic movements,
+              and intensity to create a stronger, leaner, more flexible, healthier YOU.{'\n'}
+            </Text>
+            <Text style={styles.text}>
+              Fusion is strength. Fat loss. Muscle building. Mobility. Longevity.
+              If the question is: "How can I be better today?" Fusion is the answer.{'\n'}
+            </Text>
+            <Text style={styles.text}>
+              Monday – Friday: 6:00 am, noon, 5:30 pm{'\n'}
+              Saturday: 8 am and 9 am
+            </Text>
+          </Card.Body>
+        </Card>
       </View>
     );
   }
 });
 
-const circle = {
-  borderWidth: 0,
-  borderRadius: 40,
-  width: 80,
-  height: 80
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    height,
+    paddingTop: 70,
     alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: Colors.spacMediumGray
   },
-  userContainer: {
+  card: {
+    height: height * 0.8,
+    backgroundColor: Colors.spacLightGray
+  },
+  workoutTitle: {
     justifyContent: 'center',
-    alignItems: 'center'
+    fontSize: 19,
+    fontWeight: 'bold',
+    color: Colors.spacGold,
+    paddingBottom: 5
   },
-  userProfilePhoto: {
-    ...circle,
-    alignSelf: 'center'
+  text: {
+    fontSize: 16,
+    color: Colors.spacCream
   },
-  counterButton: {
-    ...circle,
-    backgroundColor: 'green',
+  stretch: {
+    width: width * .87,
     alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20
-  },
-  counter: {
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'center'
-  },
-  welcome: {
-    textAlign: 'center',
-    color: 'black',
-    marginBottom: 5,
-    padding: 5
-  },
-  linkButton: {
-    textAlign: 'center',
-    color: '#CCCCCC',
-    marginBottom: 10,
-    padding: 5
+    height: 75
   }
 });
 
