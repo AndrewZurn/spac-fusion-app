@@ -15,10 +15,13 @@ const WorkoutCard = React.createClass({
   propTypes: {
     workout: PropTypes.object.isRequired,
     displayDay: PropTypes.bool.isRequired,
-    displayButton: PropTypes.bool.isRequired,
     extendedExerciseDescription: PropTypes.bool.isRequired,
-    displayButtonText: PropTypes.string,
-    buttonAction: PropTypes.func
+    displayRightButton: PropTypes.bool.isRequired,
+    displayRightButtonText: PropTypes.string,
+    rightButtonAction: PropTypes.func,
+    displayLeftButton: PropTypes.bool.isRequired,
+    displayLeftButtonText: PropTypes.string,
+    leftButtonAction: PropTypes.func
   },
 
   render() {
@@ -53,13 +56,14 @@ const WorkoutCard = React.createClass({
     let durationText = '';
     if (workout && workout.duration) { durationText = workout.duration; }
 
-    let button;
-    if (this.props.displayButton) {
-      button = (
-          <Card.Actions position='right'>
-            <Button text={this.props.displayButtonText} onPress={this.props.buttonAction}/>
-          </Card.Actions>
-      );
+    let rightButton;
+    if (this.props.displayRightButton) {
+      rightButton = <Button text={this.props.displayRightButtonText} onPress={this.props.rightButtonAction}/>;
+    }
+
+    let leftButton;
+    if (this.props.displayLeftButton) {
+      leftButton = <Button text={this.props.displayLeftButtonText} onPress={this.props.leftButtonAction}/>;
     }
 
     let dayText = '';
@@ -77,7 +81,10 @@ const WorkoutCard = React.createClass({
               <Text style={styles.text}>Description: {descriptionText}</Text>
               <Text style={styles.text}>Exercises: {exerciseOptionsText}</Text>
             </Card.Body>
-            {button}
+            <Card.Actions position='right'>
+              {leftButton}
+              {rightButton}
+            </Card.Actions>
           </Card>
         </View>
     );

@@ -36,9 +36,12 @@ const WorkoutView = React.createClass({
       <WorkoutCard workout={this.props.todaysWorkout}
                    displayDay={false}
                    extendedExerciseDescription={true}
-                   displayButton={true}
-                   displayButtonText={'Start Workout'}
-                   buttonAction={() => console.log('I\'m Working!!!')}/>
+                   displayRightButton={true}
+                   displayRightButtonText={'Start Workout'}
+                   rightButtonAction={() => console.log('I\'m Working!!!')}
+                   displayLeftButton={true}
+                   displayLeftButtonText={'Details'}
+                   leftButtonAction={() => console.log('I\'m Also Working!!!')}/>
     );
 
     return (

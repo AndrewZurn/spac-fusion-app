@@ -23,14 +23,15 @@ const ScheduleView = React.createClass({
   },
 
   render() {
-    let workoutCard = this.props.workouts.map((workout, index) => {
-      return <WorkoutCard
-                key={'workout-card-' + index}
-                workout={workout}
-                displayDay={true}
-                displayButton={false}
-                extendedExerciseDescription={false}/>;
-    });
+    let workoutCard = this.props.workouts.map((workout, index) =>
+      <WorkoutCard
+          key={'workout-card-' + index}
+          workout={workout}
+          extendedExerciseDescription={false}
+          displayDay={true}
+          displayRightButton={false}
+          displayLeftButton={false}/>
+      );
 
     let remainingWorkoutsText = '';
     let remainingWorkoutsCount = this.props.workouts.length;
