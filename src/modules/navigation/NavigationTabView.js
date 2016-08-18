@@ -32,7 +32,7 @@ const NavigationTabView = React.createClass({
             getTitle={state => state.key}
             renderTitleComponent={() => {
               return <Navigation.Header.Title textStyle={styles.titleText}>
-                {props.scene.route.key}
+                {props.scene.route.title}
               </Navigation.Header.Title>;
             }
             }

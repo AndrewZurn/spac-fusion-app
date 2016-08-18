@@ -4,9 +4,9 @@ import {
     View,
     Text
 } from 'react-native';
-import moment from 'moment';
 import {Card, Button} from 'react-native-material-design';
 import Colors from '../utils/colors';
+import * as WorkoutUtils from '../utils/workoutUtils';
 
 const NEW_LINE_TAB_CHARS = '\n\t - ';
 
@@ -27,34 +27,22 @@ const WorkoutCard = React.createClass({
   render() {
     const workout = this.props.workout;
 
-    let exerciseNameText = '';
-    let descriptionText = '';
+    let exerciseNameText = WorkoutUtils.getName(workout);
+    let descriptionText = WorkoutUtils.getDescription(workout);
+
     let exerciseOptionsText = '';
-    if (workout && workout.exercise) {
-      if (workout.exercise.name) {
-        exerciseNameText = workout.exercise.name;
-      }
-
-      if (workout.exercise.description) {
-        descriptionText = workout.exercise.description;
-      }
-
-      if (workout.exercise.exerciseOptions) {
-        if (this.props.extendedExerciseDescription) {
-          descriptionText += '\n';
-
-          // if extended exercise description, drop exercise options onto new line and tab for each
-          exerciseOptionsText = NEW_LINE_TAB_CHARS + workout.exercise.exerciseOptions.map(option => {
-            return `${option.name} - ${option.targetAmount} ${option.type}`;
-          }).join(NEW_LINE_TAB_CHARS);
-        } else {
-          exerciseOptionsText = workout.exercise.exerciseOptions.map(option => option.name).join(', ');
-        }
+    let exerciseOptions = WorkoutUtils.getExerciseOptionsText(workout, this.props.extendedExerciseDescription);
+    if (exerciseOptions && exerciseOptions.length > 0) {
+      // if extended exercise description, drop exercise options onto new line and tab for each
+      if (this.props.extendedExerciseDescription) {
+        descriptionText += '\n';
+        exerciseOptionsText = NEW_LINE_TAB_CHARS + exerciseOptions.join(NEW_LINE_TAB_CHARS);
+      } else {
+        exerciseOptionsText = exerciseOptions.join(', ');
       }
     }
 
-    let durationText = '';
-    if (workout && workout.duration) { durationText = workout.duration; }
+    let durationText = WorkoutUtils.getDuration(workout);
 
     let rightButton;
     if (this.props.displayRightButton) {
@@ -67,8 +55,8 @@ const WorkoutCard = React.createClass({
     }
 
     let dayText = '';
-    if (this.props.displayDay && workout && workout.workoutDate) {
-      dayText = moment(workout.workoutDate).format('dddd');
+    if (this.props.displayDay) {
+      dayText = WorkoutUtils.getDay(workout);
     }
 
     return (
@@ -77,8 +65,8 @@ const WorkoutCard = React.createClass({
             <Card.Body>
               <Text style={styles.text}>{dayText}</Text>
               <Text style={styles.workoutTitle}>{exerciseNameText}</Text>
-              <Text style={styles.text}>Duration: {durationText}</Text>
-              <Text style={styles.text}>Description: {descriptionText}</Text>
+              <Text style={styles.text}>{durationText}</Text>
+              <Text style={styles.text}>{descriptionText}</Text>
               <Text style={styles.text}>Exercises: {exerciseOptionsText}</Text>
             </Card.Body>
             <Card.Actions position='right'>

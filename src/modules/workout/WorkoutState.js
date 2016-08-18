@@ -6,8 +6,8 @@ import * as UserService from '../../services/userService';
 // Initial state
 const initialState = Map({
   workouts: [],
-  todaysWorkout: {},
   canUnlockWorkout: false,
+  isStartingWorkout: false,
   loading: false
 });
 
@@ -23,6 +23,8 @@ const GET_TODAYS_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_RESPONSE';
 
 const CAN_UNLOCK_WORKOUT_REQUEST = 'WORKOUT_STATE/CAN_UNLOCK_WORKOUT_REQUEST';
 const CAN_UNLOCK_WORKOUT_RESPONSE = 'WORKOUT_STATE/CAN_UNLOCK_WORKOUT_RESPONSE';
+
+const SETUP_FOR_WORKOUT_DETAILS = 'WORKOUT_STATE/SETUP_FOR_WORKOUT_DETAILS';
 
 // ACTION STATE FUNCTIONS
 export function getWorkouts() {
@@ -44,6 +46,19 @@ export function canUnlockWorkout(userId) {
   return {
     type: CAN_UNLOCK_WORKOUT_REQUEST,
     userId
+  };
+}
+
+/**
+ * Setup for a DetailsView of a Workout.
+ * @param isStartingWorkout {boolean} true if starting a workout,
+ *                                    false if a normal details view is to be presented.
+ * @returns {{type: string, isStartingWorkout: *}}
+ */
+export function setupForWorkoutDetails(isStartingWorkout) {
+  return {
+    type: SETUP_FOR_WORKOUT_DETAILS,
+    isStartingWorkout
   };
 }
 
@@ -93,7 +108,7 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
     case GET_WORKOUT_REQUEST:
       return loop(
           state.set('loading', true),
-          Effects.promise(requestGetWorkout(action.id))
+          Effects.promise(requestGetWorkout, action.id)
       );
 
     case GET_TODAYS_WORKOUT_REQUEST:
@@ -107,6 +122,9 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
           state.set('loading', true),
           Effects.promise(requestCanUnlockWorkout, action.userId)
       );
+
+    case SETUP_FOR_WORKOUT_DETAILS:
+      return state.set('isStartingWorkout', action.isStartingWorkout);
 
     // RESPONSES
     case GET_WORKOUTS_RESPONSE:
@@ -122,7 +140,7 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
     case GET_TODAYS_WORKOUT_RESPONSE:
       return state
           .set('loading', false)
-          .set('todaysWorkout', action.payload);
+          .set('workouts', [action.payload]);
 
     case CAN_UNLOCK_WORKOUT_RESPONSE:
       return state

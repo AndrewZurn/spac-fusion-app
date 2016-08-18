@@ -3,6 +3,7 @@
 import React from 'react';
 import HomeViewContainer from './home/HomeViewContainer';
 import WorkoutViewContainer from './workout/WorkoutViewContainer';
+import WorkoutDetailsViewContainer from './workout/workoutDetails/WorkoutDetailsViewContainer';
 import ScheduleViewContainer from './schedule/ScheduleViewContainer';
 import ProfileViewContainer from './profile/ProfileViewContainer';
 
@@ -19,6 +20,12 @@ export default function AppRouter(props) {
   if (key.indexOf('Workout') === 0) {
     return (
       <WorkoutViewContainer />
+    );
+  }
+
+  if (key.indexOf('DetailsForWorkout') === 0) {
+    return (
+        <WorkoutDetailsViewContainer />
     );
   }
 
