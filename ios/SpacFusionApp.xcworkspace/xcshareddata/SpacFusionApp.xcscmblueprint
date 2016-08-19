@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "A6186A4C07C327AE7722F96B6287F725B718EF37",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "03F64ABDA0B79ACE89645E6A1EA1E3F805B4E1C7" : 0,
+    "A6186A4C07C327AE7722F96B6287F725B718EF37" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "11D2E87A-AEF6-4123-ACD6-57B49929E1EC",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "03F64ABDA0B79ACE89645E6A1EA1E3F805B4E1C7" : "..",
+    "A6186A4C07C327AE7722F96B6287F725B718EF37" : "mobile-app\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SpacFusionApp",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ios\/SpacFusionApp.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/git.retailcs.awsdev.infor.com\/InforRetailJVM\/play-healthcheck.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "03F64ABDA0B79ACE89645E6A1EA1E3F805B4E1C7"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/AndrewZurn\/spac-fusion-app.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A6186A4C07C327AE7722F96B6287F725B718EF37"
+    }
+  ]
+}

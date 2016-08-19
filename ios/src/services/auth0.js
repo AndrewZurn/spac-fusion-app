@@ -25,7 +25,7 @@ export function showLogin() {
   }
 
   const options = {
-    closable: __DEV__,
+    closable: true
   };
 
   if (Platform.OS === 'ios') {
