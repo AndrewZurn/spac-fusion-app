@@ -13,19 +13,11 @@ export async function getWorkouts() {
       .catch(error => console.error(`Error during getWorkouts. Error: ${error}`));
 }
 
-export function getWorkoutsSentEventTopic() { return api.xhrSentTopic(WORKOUTS_BASE_PATH); }
-
-export function getWorkoutsFinishedEventTopic() { return api.xhrFinishedTopic(WORKOUTS_BASE_PATH); }
-
 export async function getTodaysWorkout() {
   return api.get(GET_TODAYS_WORKOUT_PATH, API_FAILED_REQUEST_WARNING)
       .then(response => response.body)
       .catch(error => console.error(`Error during getTodaysWorkouts. Error: ${error}`));
 }
-
-export function getTodaysWorkoutSentEventTopic() { return api.xhrSentTopic(GET_TODAYS_WORKOUT_PATH); }
-
-export function getTodaysWorkoutFinishedEventTopic() { return api.xhrFinishedTopic(GET_TODAYS_WORKOUT_PATH); }
 
 /**
  * Search for an workout with a given workoutId
@@ -38,16 +30,8 @@ export async function getWorkout(workoutId) {
       .catch(error => console.error(`Error during getWorkouts(${workoutId}. Error: ${error}`));
 }
 
-export function getWorkoutSentEventTopic(workoutId) { return api.xhrSentTopic(WORKOUTS_BASE_PATH + `/${workoutId}`); }
-
-export function getWorkoutFinishedEventTopic(workoutId) { return api.xhrFinishedTopic(WORKOUTS_BASE_PATH + `/${workoutId}`); }
-
 export async function getWeeksRemainingWorkouts() {
   return api.get(GET_WEEKS_REMAINING_WORKOUTS_PATH, API_FAILED_REQUEST_WARNING)
       .then(response => response.body)
       .catch(error => console.error(`Error during getWeeksRemainingWorkouts. Error: ${error}`));
 }
-
-export function getWeeksRemainingWorkoutsSentEventTopic(workoutId) { return api.xhrSentTopic(GET_WEEKS_REMAINING_WORKOUTS_PATH + `/${workoutId}`); }
-
-export function getWeeksRemainingWorkoutsFinishedEventTopic(workoutId) { return api.xhrFinishedTopic(GET_WEEKS_REMAINING_WORKOUTS_PATH + `/${workoutId}`); }
