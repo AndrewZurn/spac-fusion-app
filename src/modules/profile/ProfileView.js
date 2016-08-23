@@ -1,11 +1,12 @@
 import React, {PropTypes} from 'react';
 import {
-  Dimensions,
-  Text,
-  TextInput,
-  View,
-  ScrollView,
-  StyleSheet
+    Dimensions,
+    ListView,
+    Text,
+    TextInput,
+    TouchableHighlight,
+    View,
+    StyleSheet
 } from 'react-native';
 import {Card} from 'react-native-material-design';
 import * as NavigationState from '../../modules/navigation/NavigationState';
@@ -30,9 +31,16 @@ const ProfileView = React.createClass({
     dispatch: PropTypes.func.isRequired
   },
   getAuth0UserId() {
-    if (this.props.auth0User && this.props.auth0User.userId) { return this.props.auth0User.userId.split('|')[1]; }
-    else if (__DEV__) { return TestUserId; }
-    else { return ''; }
+    console.log('doing something');
+    if (__DEV__) {
+      return TestUserId;
+    }
+    else if (this.props.auth0User && this.props.auth0User.get('userId')) {
+      return this.props.auth0User.get('userId').split('|')[1];
+    }
+    else {
+      return '';
+    }
   },
   getFusionUser() {
     let auth0UserId = this.getAuth0UserId();
@@ -52,20 +60,36 @@ const ProfileView = React.createClass({
     }
   },
   getFusionUserEmail() {
-    if (this.props.fusionUser && this.props.fusionUser.email) { return this.props.fusionUser.email; }
-    else { return ''; }
+    if (this.props.fusionUser && this.props.fusionUser.email) {
+      return this.props.fusionUser.email;
+    }
+    else {
+      return '';
+    }
   },
   getFusionUserHeight() {
-    if (this.props.fusionUser && this.props.fusionUser.height) { return this.props.fusionUser.height; }
-    else { return null; }
+    if (this.props.fusionUser && this.props.fusionUser.height) {
+      return this.props.fusionUser.height;
+    }
+    else {
+      return null;
+    }
   },
   getFusionUserWeight() {
-    if (this.props.fusionUser && this.props.fusionUser.weight) { return this.props.fusionUser.weight; }
-    else { return null; }
+    if (this.props.fusionUser && this.props.fusionUser.weight) {
+      return this.props.fusionUser.weight;
+    }
+    else {
+      return null;
+    }
   },
   getFusionUserLevel() {
-    if (this.props.fusionUser && this.props.fusionUser.programLevel) { return this.props.fusionUser.programLevel; }
-    else { return ''; }
+    if (this.props.fusionUser && this.props.fusionUser.programLevel) {
+      return this.props.fusionUser.programLevel;
+    }
+    else {
+      return '';
+    }
   },
 
   render() {
@@ -75,20 +99,10 @@ const ProfileView = React.createClass({
     let userWeight = this.getFusionUserWeight();
     let userFusionLevel = this.getFusionUserLevel();
 
-    let completedWorkoutsCards;
+    let completedWorkoutsDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     if (this.props.completedWorkouts && this.props.completedWorkouts.length > 0) {
-      completedWorkoutsCards = this.props.completedWorkouts.map(workout => {
-        let day = moment(workout.completedDate).format('dddd');
-        let date = moment(workout.completedDate).format('MMM Do');
-        return (
-            <Card style={styles.card} key={workout.id}>
-              <Card.Body key={workout.id + '_body'}>
-                <Text style={styles.text} key={workout.id + '_day'}>{day} - {date}</Text>
-                <Text style={styles.text} key={workout.id + '_name'}>{workout.exerciseName}</Text>
-              </Card.Body>
-            </Card>
-        );
-      });
+      completedWorkoutsDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+          .cloneWithRows(this.props.completedWorkouts);
     }
 
     return (
@@ -129,14 +143,26 @@ const ProfileView = React.createClass({
           <Card style={styles.card}>
             <Card.Body>
               <Text style={styles.title}>Completed Workouts</Text>
-              </Card.Body>
-            </Card>
-
-          <ScrollView ref='scrollView'
-                          keyboardDismissMode='interactive'
-                          style={styles.scrollView}>
-                {completedWorkoutsCards}
-          </ScrollView>
+              <ListView
+                  dataSource={completedWorkoutsDataSource}
+                  style={styles.listView}
+                  renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
+                  renderRow={(workout) => {
+                    let day = moment(workout.completedDate).format('dddd');
+                    let date = moment(workout.completedDate).format('MMM Do');
+                    return (
+                        <TouchableHighlight onPress={() => console.log('im doing it here!!!')}
+                                            underlayColor='#dddddd'>
+                          <View style={{paddingTop: 7, paddingBottom: 7}}>
+                            <Text style={styles.text} key={workout.id + '_day'}>{day} - {date}</Text>
+                            <Text style={styles.text} key={workout.id + '_name'}>{workout.exerciseName}</Text>
+                          </View>
+                        </TouchableHighlight>
+                    );
+                  }}
+              />
+            </Card.Body>
+          </Card>
 
         </View>
     );
@@ -162,15 +188,6 @@ const styles = StyleSheet.create({
     color: Colors.spacCream,
     fontFamily: Colors.textStyle
   },
-  textEdit: {
-    height: 35,
-    width: width * 0.8,
-    marginBottom: 5,
-    borderColor: Colors.spacGold,
-    backgroundColor: Colors.spacLightGray,
-    color: Colors.spacGold,
-    fontFamily: Colors.textStyle
-  },
   textEditHalfWidth: {
     height: 35,
     width: width * 0.40,
@@ -190,8 +207,19 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.spacLightGray
   },
-  scrollView: {
-    flex: 1
+  separator: {
+    height: 1,
+    backgroundColor: Colors.spacGold
+  },
+  listView: {
+    backgroundColor: Colors.spacLightGray
+  },
+  cellContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.spacLightGray
   }
 });
 
