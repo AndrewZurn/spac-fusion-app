@@ -29,7 +29,8 @@ export default React.createClass({
 
 const styles = StyleSheet.create({
   buttonText: {
-    color: Colors.spacCream
+    color: Colors.spacCream,
+    fontFamily: Colors.textStyle
   },
   button: {
     flex: 1,

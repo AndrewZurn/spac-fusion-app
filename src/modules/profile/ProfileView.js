@@ -81,10 +81,10 @@ const ProfileView = React.createClass({
         let day = moment(workout.completedDate).format('dddd');
         let date = moment(workout.completedDate).format('MMM Do');
         return (
-            <Card style={styles.card}>
-              <Card.Body>
-                <Text style={styles.text}>{day} - {date}</Text>
-                <Text style={styles.text}>{workout.exerciseName}</Text>
+            <Card style={styles.card} key={workout.id}>
+              <Card.Body key={workout.id + '_body'}>
+                <Text style={styles.text} key={workout.id + '_day'}>{day} - {date}</Text>
+                <Text style={styles.text} key={workout.id + '_name'}>{workout.exerciseName}</Text>
               </Card.Body>
             </Card>
         );
@@ -102,21 +102,23 @@ const ProfileView = React.createClass({
               </Text>
 
               <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View style={{flexDirection: 'column'}}>
+                <View style={[styles.textInputParent, {flexDirection: 'column'}]}>
                   <Text style={styles.text}>Height</Text>
                   <TextInput
                       style={styles.textEditHalfWidth}
                       onChangeText={(text) => this.setState({text})}
                       placeholder='Enter height'
+                      placeholderTextColor={Colors.spacGold}
                       value={userHeight}/>
                 </View>
 
-                <View style={{flexDirection: 'column'}}>
+                <View style={[styles.textInputParent, {flexDirection: 'column'}]}>
                   <Text style={styles.text}>Weight</Text>
                   <TextInput
-                      style={[styles.textEditHalfWidth, styles.moreMarginBottom]}
+                      style={[styles.textEditHalfWidth]}
                       onChangeText={(text) => this.setState({text})}
                       placeholder='Enter weight'
+                      placeholderTextColor={Colors.spacGold}
                       value={userWeight}/>
                 </View>
               </View>
@@ -149,30 +151,38 @@ const styles = StyleSheet.create({
   },
   title: {
     justifyContent: 'center',
-    fontSize: 19,
+    fontSize: Colors.titleSize,
     fontWeight: 'bold',
     color: Colors.spacGold,
-    paddingBottom: 2
+    paddingBottom: 2,
+    fontFamily: Colors.textStyle
   },
   text: {
-    fontSize: 16,
-    color: Colors.spacCream
+    fontSize: Colors.textSize,
+    color: Colors.spacCream,
+    fontFamily: Colors.textStyle
   },
   textEdit: {
     height: 35,
     width: width * 0.8,
     marginBottom: 5,
-    borderColor: Colors.spacGray,
-    backgroundColor: 'white',
-    borderWidth: 1
+    borderColor: Colors.spacGold,
+    backgroundColor: Colors.spacLightGray,
+    color: Colors.spacGold,
+    fontFamily: Colors.textStyle
   },
   textEditHalfWidth: {
     height: 35,
     width: width * 0.40,
-    marginBottom: 5,
-    borderColor: Colors.spacGray,
-    backgroundColor: 'white',
-    borderWidth: 1
+    backgroundColor: Colors.spacLightGray,
+    color: Colors.spacGold,
+    fontFamily: Colors.textStyle
+  },
+  // workaround as textinput bottom border doesn't seem to be working currently.
+  // https://github.com/facebook/react-native/issues/7029
+  textInputParent: {
+    borderBottomColor: Colors.spacGold,
+    borderBottomWidth: 1
   },
   moreMarginBottom: {
     marginBottom: 10

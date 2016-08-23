@@ -59,9 +59,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.spacMediumGray
   },
   remainingWorkoutsText: {
-    fontSize: 16,
+    fontSize: Colors.textSize,
     color: Colors.spacCream,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: Colors.textStyle
   },
   scrollView: {
     flex: 1,

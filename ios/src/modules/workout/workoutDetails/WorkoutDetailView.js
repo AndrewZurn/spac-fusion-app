@@ -93,18 +93,21 @@ const styles = StyleSheet.create({
   },
   workoutTitle: {
     justifyContent: 'center',
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: Colors.spacGold
+    color: Colors.spacGold,
+    fontFamily: Colors.textStyle
   },
   altTitle: {
     justifyContent: 'center',
-    fontSize: 16,
-    color: Colors.spacGold
+    fontSize: Colors.textSize,
+    color: Colors.spacGold,
+    fontFamily: Colors.textStyle
   },
   text: {
-    fontSize: 16,
-    color: Colors.spacCream
+    fontSize: Colors.textSize,
+    color: Colors.spacCream,
+    fontFamily: Colors.textStyle
   },
   scrollView: {
     flex: 1
