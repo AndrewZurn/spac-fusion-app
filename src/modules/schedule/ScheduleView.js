@@ -65,8 +65,7 @@ const styles = StyleSheet.create({
     fontFamily: Colors.textStyle
   },
   scrollView: {
-    flex: 1,
-    margin: 5
+    flex: 1
   }
 });
 
