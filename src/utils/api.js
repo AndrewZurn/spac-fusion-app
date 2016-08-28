@@ -161,7 +161,10 @@ async function handleResponse(path, response) {
 
 function getRequestHeaders(body, token) {
   const headers = body
-    ? {'Accept': 'application/json', 'Content-Type': 'application/json'}
+    ? {'Accept': 'application/json',
+       'Content-Type': 'application/json',
+       'Origin': 'https://fusion-mobile.spac.com/',
+       'X-Requested-With': 'fusion-mobile'}
     : {'Accept': 'application/json'};
 
   if (token) {

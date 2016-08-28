@@ -13,10 +13,10 @@ let localConfig = Map({
   API_ROOT: 'http://localhost:8080'
 });
 
-let testConfig = Map({
+let devConfig = Map({
   ...baseConfig,
   API_FAILED_REQUEST_WARNING_MESSAGE: true,
-  API_ROOT: 'http://SOME_TEST_HOST:8080'
+  API_ROOT: 'http://spac-fusion-api.us-west-2.elasticbeanstalk.com'
 });
 
 let prodConfig = Map({
@@ -51,8 +51,8 @@ function getConfig() {
   let environment = env.ENVIRONMENT;
   if (environment === 'prod') {
     return prodConfig;
-  } else if (environment === 'test') {
-    return testConfig;
+  } else if (environment === 'dev') {
+    return devConfig;
   } else if (environment === 'local') {
     return localConfig;
   } else {
