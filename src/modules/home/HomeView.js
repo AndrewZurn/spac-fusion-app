@@ -10,7 +10,6 @@ import {
 import {Card} from 'react-native-material-design';
 import Colors from '../../utils/colors';
 
-var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 
 const HomeView = React.createClass({
@@ -33,8 +32,8 @@ const HomeView = React.createClass({
                 <Text style={[styles.text, {color: Colors.spacGold}]}>Monday – Friday:</Text> 6:00 am, noon, 5:30 pm{'\n'}
                 <Text style={[styles.text, {color: Colors.spacGold}]}>Saturday:</Text> 8 am and 9 am
               </Text>
-              <Text style={[styles.text, {textAlign: 'center'}]}>
-                {'\n'}Definitions:
+              <Text style={[styles.text, {textAlign: 'center', paddingTop: 6}]}>
+                Definitions:
               </Text>
               <Text style={styles.text}>
                 <Text style={[styles.text, {color: Colors.spacGold}]}>AMRAP</Text> - As many rounds/reps As possible{'\n'}
@@ -46,10 +45,6 @@ const HomeView = React.createClass({
               </Text>
             </Card.Body>
           </Card>
-          <ScrollView ref='scrollView'
-                      keyboardDismissMode='interactive'
-                      style={styles.scrollView}>
-          </ScrollView>
         </View>
     );
   }
@@ -58,10 +53,11 @@ const HomeView = React.createClass({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 70,
+    paddingTop: 62,
     backgroundColor: Colors.spacMediumGray
   },
   card: {
+    height: height * 0.8,
     backgroundColor: Colors.spacLightGray
   },
   title: {
@@ -70,21 +66,13 @@ const styles = StyleSheet.create({
     fontSize: Colors.titleSize + 2,
     fontWeight: 'bold',
     color: Colors.spacGold,
-    paddingBottom: 6,
+    paddingBottom: 4,
     fontFamily: Colors.textStyle
   },
   text: {
     fontSize: Colors.textSize - 1,
     color: Colors.spacCream,
     fontFamily: Colors.textStyle
-  },
-  stretch: {
-    width: width * .87,
-    alignItems: 'center',
-    height: 75
-  },
-  scrollView: {
-    flex: 1
   }
 });
 
