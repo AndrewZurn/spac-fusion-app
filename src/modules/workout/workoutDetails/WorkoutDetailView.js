@@ -23,7 +23,7 @@ const WorkoutDetailView = React.createClass({
       workout = this.props.workouts[0];
     }
 
-    let workoutDescription = WorkoutUtils.getDescription(workout);
+    let workoutDescription = WorkoutUtils.getExerciseInstructions(workout);
     let duration = WorkoutUtils.getDuration(workout);
 
     let exerciseOptionsCards = WorkoutUtils.getExerciseOptions(workout).map(exerciseOption => {

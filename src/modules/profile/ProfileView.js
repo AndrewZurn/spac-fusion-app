@@ -31,7 +31,6 @@ const ProfileView = React.createClass({
     dispatch: PropTypes.func.isRequired
   },
   getAuth0UserId() {
-    console.log('doing something');
     if (__DEV__) {
       return TestUserId;
     }

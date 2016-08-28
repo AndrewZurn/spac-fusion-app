@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {
+    Dimensions,
     StyleSheet,
     View,
     Text
@@ -7,6 +8,8 @@ import {
 import {Card, Button} from 'react-native-material-design';
 import Colors from '../utils/colors';
 import * as WorkoutUtils from '../utils/workoutUtils';
+
+var width = Dimensions.get('window').width;
 
 const WorkoutCard = React.createClass({
   displayName: 'WorkoutCard',
@@ -21,13 +24,12 @@ const WorkoutCard = React.createClass({
   render() {
     const workout = this.props.workout;
     let exerciseNameText = WorkoutUtils.getName(workout);
-    let descriptionText = WorkoutUtils.getDescription(workout);
+    console.log(`I am here: ${workout}`);
+    let descriptionText = WorkoutUtils.getPreviewText(workout);
 
     let exerciseOptionsText = (
         WorkoutUtils.getExerciseOptions(workout).map(option => option.targetAmount).join(', ')
     );
-
-    let durationText = WorkoutUtils.getDuration(workout);
 
     let rightButton;
     if (this.props.displayRightButton) {
@@ -45,7 +47,6 @@ const WorkoutCard = React.createClass({
             <Card.Body>
               <Text style={[styles.text, {textAlign: 'center'}]}>{dayText}</Text>
               <Text style={styles.workoutTitle}>{exerciseNameText}</Text>
-              <Text style={styles.text}>{durationText}</Text>
               <Text style={styles.text}>{descriptionText}</Text>
               <Text style={styles.text}>Exercise Preview: {exerciseOptionsText}</Text>
             </Card.Body>
@@ -66,6 +67,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.spacMediumGray
   },
   card: {
+    width: width * 0.95,
     backgroundColor: Colors.spacLightGray
   },
   workoutTitle: {

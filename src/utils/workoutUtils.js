@@ -11,12 +11,20 @@ export function getName(workout) {
   return exerciseName;
 }
 
-export function getDescription(workout) {
+export function getPreviewText(workout) {
+  let previewText = '';
+  if (workout && workout.previewText) {
+    previewText = workout.previewText;
+  }
+  return previewText;
+}
+
+export function getExerciseInstructions(workout) {
   const exercise = findExercise(workout);
 
   let exerciseDescription = '';
-  if (exercise && exercise.description) {
-    exerciseDescription = exercise.description;
+  if (exercise && exercise.instructions) {
+    exerciseDescription = exercise.instructions;
   }
 
   return exerciseDescription;
