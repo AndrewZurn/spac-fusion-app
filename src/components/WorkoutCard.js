@@ -36,7 +36,7 @@ const WorkoutCard = React.createClass({
       // if extended exercise description, drop exercise options onto new line and tab for each
       if (this.props.extendedExerciseDescription) {
         descriptionText += '\n';
-        exerciseOptionsText = NEW_LINE_TAB_CHARS + exerciseOptions.join(NEW_LINE_TAB_CHARS);
+        exerciseOptionsText = exerciseOptions.join('\n');
       } else {
         exerciseOptionsText = exerciseOptions.join(', ');
       }
@@ -67,7 +67,8 @@ const WorkoutCard = React.createClass({
               <Text style={styles.workoutTitle}>{exerciseNameText}</Text>
               <Text style={styles.text}>{durationText}</Text>
               <Text style={styles.text}>{descriptionText}</Text>
-              <Text style={styles.text}>Exercises: {exerciseOptionsText}</Text>
+              <Text style={[styles.text, {textAlign: 'center'}]}>Exercises:</Text>
+              <Text style={styles.text}>{exerciseOptionsText}</Text>
             </Card.Body>
             <Card.Actions position='right'>
               {leftButton}
@@ -90,6 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.spacLightGray
   },
   workoutTitle: {
+    textAlign: 'center',
     justifyContent: 'center',
     fontSize: Colors.titleSize,
     fontWeight: 'bold',

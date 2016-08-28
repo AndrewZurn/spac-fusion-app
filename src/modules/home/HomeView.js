@@ -23,31 +23,32 @@ const HomeView = React.createClass({
         <View style={styles.container}>
           <Card style={styles.card}>
             <Card.Body>
-              <Image resizeMode='stretch'
-                     style={styles.stretch}
-                     source={require('../../img/fusion-by-spac-icon.jpeg')}/>
+              <Text style={styles.title}>
+                Fusion by SPAC
+              </Text>
+              <Text style={[styles.text, {textAlign: 'center'}]}>
+                Weekly Schedule:
+              </Text>
+              <Text style={styles.text}>
+                <Text style={[styles.text, {color: Colors.spacGold}]}>Monday – Friday:</Text> 6:00 am, noon, 5:30 pm{'\n'}
+                <Text style={[styles.text, {color: Colors.spacGold}]}>Saturday:</Text> 8 am and 9 am
+              </Text>
+              <Text style={[styles.text, {textAlign: 'center'}]}>
+                {'\n'}Definitions:
+              </Text>
+              <Text style={styles.text}>
+                <Text style={[styles.text, {color: Colors.spacGold}]}>AMRAP</Text> - As many rounds/reps As possible{'\n'}
+                <Text style={[styles.text, {color: Colors.spacGold}]}>TASK</Text> - Finish task at hand as fast as possible{'\n'}
+                <Text style={[styles.text, {color: Colors.spacGold}]}>HEAVY</Text> - Lift and form focused with heavy weight and additional exercise{'\n'}
+                <Text style={[styles.text, {color: Colors.spacGold}]}>CARDIO</Text> - Cardio focused with bursts of exercises{'\n'}
+                <Text style={[styles.text, {color: Colors.spacGold}]}>30:30</Text> - 30 seconds of work, 30 seconds of rest{'\n'}
+                <Text style={[styles.text, {color: Colors.spacGold}]}>20:10</Text> - 20 seconds of work, 10 seconds of rest{'\n'}
+              </Text>
             </Card.Body>
           </Card>
           <ScrollView ref='scrollView'
                       keyboardDismissMode='interactive'
                       style={styles.scrollView}>
-            <Card style={styles.card}>
-              <Card.Body>
-                <Text style={styles.text} key={2}>
-                  Make the most of every second you spend in the gym. Fusion is hard-core results backed by
-                  hard-core science. Say goodbye to boredom with constant variation, strategic movements,
-                  and intensity to create a stronger, leaner, more flexible, healthier YOU.{'\n'}
-                </Text>
-                <Text style={styles.text} key={3}>
-                  Fusion is strength. Fat loss. Muscle building. Mobility. Longevity.
-                  If the question is: "How can I be better today?" Fusion is the answer.{'\n'}
-                </Text>
-                <Text style={styles.text} key={4}>
-                  Monday – Friday: 6:00 am, noon, 5:30 pm{'\n'}
-                  Saturday: 8 am and 9 am
-                </Text>
-              </Card.Body>
-            </Card>
           </ScrollView>
         </View>
     );
@@ -63,12 +64,13 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.spacLightGray
   },
-  workoutTitle: {
-    justifyContent: 'center',
-    fontSize: Colors.titleSize,
+  title: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: Colors.titleSize + 2,
     fontWeight: 'bold',
     color: Colors.spacGold,
-    paddingBottom: 5,
+    paddingBottom: 6,
     fontFamily: Colors.textStyle
   },
   text: {
