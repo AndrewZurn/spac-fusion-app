@@ -19,12 +19,14 @@ const AppView = React.createClass({
       .then(snapshot => {
         const {dispatch} = this.props;
 
-        if (snapshot) {
+        if (__DEV__) {
+          dispatch(SessionStateActions.initializeSessionState());
+        }
+        else if (snapshot) {
           dispatch(SessionStateActions.resetSessionStateFromSnapshot(snapshot));
         } else {
           dispatch(SessionStateActions.initializeSessionState());
         }
-        //dispatch(SessionStateActions.initializeSessionState());
 
         store.subscribe(() => {
           snapshotUtil.saveSnapshot(store.getState());

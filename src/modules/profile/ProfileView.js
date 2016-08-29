@@ -16,7 +16,6 @@ import * as WorkoutUtils from '../../utils/workoutUtils';
 import moment from 'moment';
 
 const width = Dimensions.get('window').width;
-const TestUserId = '123454321';
 var page = 0;
 
 /**
@@ -25,25 +24,9 @@ var page = 0;
  */
 const ProfileView = React.createClass({
   propTypes: {
-    fusionUser: PropTypes.object,
-    auth0User: PropTypes.object.isRequired,
+    fusionUser: PropTypes.object.isRequired,
     completedWorkouts: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired
-  },
-  getAuth0UserId() {
-    if (__DEV__) {
-      return TestUserId;
-    }
-    else if (this.props.auth0User && this.props.auth0User.get('userId')) {
-      return this.props.auth0User.get('userId').split('|')[1];
-    }
-    else {
-      return '';
-    }
-  },
-  getFusionUser() {
-    let auth0UserId = this.getAuth0UserId();
-    this.props.dispatch(ProfileState.getFusionUserByAuth0Id(auth0UserId));
   },
   getFusionUserCompletedWorkouts() {
     if (this.props.fusionUser) {
@@ -98,7 +81,7 @@ const ProfileView = React.createClass({
     let userWeight = this.getFusionUserWeight();
     let userFusionLevel = this.getFusionUserLevel();
 
-    let completedWorkoutsDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+    let completedWorkoutsDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     if (this.props.completedWorkouts && this.props.completedWorkouts.length > 0) {
       completedWorkoutsDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
           .cloneWithRows(this.props.completedWorkouts);

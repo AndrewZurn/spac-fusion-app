@@ -31,15 +31,8 @@ const ScheduleView = React.createClass({
           displayRightButton={false}/>
       );
 
-    let remainingWorkoutsText = '';
-    let remainingWorkoutsCount = this.props.workouts.length;
-    if (remainingWorkoutsCount > 0) {
-      remainingWorkoutsText = `Remaining Workouts this Week: ${remainingWorkoutsCount}`;
-    }
-
     return (
       <View style={styles.container} onLayout={this.getWeeksRemainingWorkouts}>
-        <Text style={styles.remainingWorkoutsText}>{remainingWorkoutsText}</Text>
         <ScrollView ref='scrollView'
                     keyboardDismissMode='interactive'
                     style={styles.scrollView}>
@@ -55,12 +48,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 70,
     backgroundColor: Colors.spacMediumGray
-  },
-  remainingWorkoutsText: {
-    fontSize: Colors.textSize,
-    color: Colors.spacCream,
-    textAlign: 'center',
-    fontFamily: Colors.textStyle
   },
   scrollView: {
     flex: 1

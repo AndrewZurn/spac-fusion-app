@@ -6,7 +6,7 @@ import * as UserService from '../../services/userService';
 // Initial state
 const initialState = Map({
   workouts: [],
-  canUnlockWorkout: false,
+  remainingWorkoutUnlocks: null,
   isStartingWorkout: false,
   loading: false
 });
@@ -21,8 +21,8 @@ const GET_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_WORKOUT_RESPONSE';
 const GET_TODAYS_WORKOUT_REQUEST = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_REQUEST';
 const GET_TODAYS_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_RESPONSE';
 
-const CAN_UNLOCK_WORKOUT_REQUEST = 'WORKOUT_STATE/CAN_UNLOCK_WORKOUT_REQUEST';
-const CAN_UNLOCK_WORKOUT_RESPONSE = 'WORKOUT_STATE/CAN_UNLOCK_WORKOUT_RESPONSE';
+const GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST';
+const GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE';
 
 const SETUP_FOR_WORKOUT_DETAILS = 'WORKOUT_STATE/SETUP_FOR_WORKOUT_DETAILS';
 
@@ -42,9 +42,9 @@ export function getTodaysWorkout() {
   return {type: GET_TODAYS_WORKOUT_REQUEST};
 }
 
-export function canUnlockWorkout(userId) {
+export function getRemainingWorkoutUnlocks(userId) {
   return {
-    type: CAN_UNLOCK_WORKOUT_REQUEST,
+    type: GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST,
     userId
   };
 }
@@ -86,10 +86,10 @@ export async function requestGetTodaysWorkout() {
   };
 }
 
-export async function requestCanUnlockWorkout(userId) {
+export async function requestRemainingWorkoutUnlocks(userId) {
   return {
-    type: CAN_UNLOCK_WORKOUT_RESPONSE,
-    payload: await UserService.canUserUnlockWorkout(userId),
+    type: GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE,
+    payload: await UserService.getRemainingWorkoutUnlocks(userId),
     receivedAt: Date.now()
   };
 }
@@ -117,10 +117,10 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
           Effects.promise(requestGetTodaysWorkout)
       );
 
-    case CAN_UNLOCK_WORKOUT_REQUEST:
+    case GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST:
       return loop(
           state.set('loading', true),
-          Effects.promise(requestCanUnlockWorkout, action.userId)
+          Effects.promise(requestRemainingWorkoutUnlocks, action.userId)
       );
 
     case SETUP_FOR_WORKOUT_DETAILS:
@@ -142,10 +142,10 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
           .set('loading', false)
           .set('workouts', [action.payload]);
 
-    case CAN_UNLOCK_WORKOUT_RESPONSE:
+    case GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE:
       return state
           .set('loading', false)
-          .set('canUnlockWorkout', action.payload.canUnlockWorkout);
+          .set('remainingWorkoutUnlocks', action.payload.remainingWorkoutUnlocks);
 
     default:
       return state;

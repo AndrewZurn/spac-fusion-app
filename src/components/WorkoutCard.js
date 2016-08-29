@@ -24,7 +24,6 @@ const WorkoutCard = React.createClass({
   render() {
     const workout = this.props.workout;
     let exerciseNameText = WorkoutUtils.getName(workout);
-    console.log(`I am here: ${workout}`);
     let descriptionText = WorkoutUtils.getPreviewText(workout);
 
     let exerciseOptionsText = (
