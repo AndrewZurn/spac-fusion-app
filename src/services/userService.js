@@ -33,3 +33,9 @@ export async function getCompletedWorkouts(fusionUserId, page) {
       .then(response => response.body)
       .catch(error => console.error(`Error during getUser. Error: ${error}`));
 }
+
+export async function updateUser(user) {
+  return api.put(USER_BY_ID_PATH(user.id), user, true)
+      .then(response => response.body)
+      .catch(error => console.error(`Error during updateUser. Error: ${error}`));
+}

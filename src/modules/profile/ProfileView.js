@@ -9,11 +9,15 @@ import {
     StyleSheet
 } from 'react-native';
 import {Card} from 'react-native-material-design';
-import * as NavigationState from '../../modules/navigation/NavigationState';
-import Colors from '../../utils/colors';
-import * as ProfileState from './ProfileState';
-import * as WorkoutUtils from '../../utils/workoutUtils';
 import moment from 'moment';
+import Colors from '../../utils/colors';
+import * as NavigationState from '../../modules/navigation/NavigationState';
+import * as ProfileState from './ProfileState';
+import * as AuthState from '../auth/AuthState';
+import * as WorkoutUtils from '../../utils/workoutUtils';
+
+var MessageBarAlert = require('react-native-message-bar').MessageBar;
+var MessageBarManager = require('react-native-message-bar').MessageBarManager;
 
 const width = Dimensions.get('window').width;
 var page = 0;
@@ -28,6 +32,20 @@ const ProfileView = React.createClass({
     completedWorkouts: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired
   },
+  getInitialState() {
+    return {
+      updatedHeight: null,
+      updatedWeight: null,
+      updatedAge: null
+    };
+  },
+  componentDidMount() {
+    MessageBarManager.registerMessageBar(this.refs.alert);
+  },
+  componentWillUnmount() {
+    MessageBarManager.unregisterMessageBar();
+  },
+
   getFusionUserCompletedWorkouts() {
     if (this.props.fusionUser) {
       this.props.dispatch(ProfileState.getFusionUserCompletedWorkouts(this.props.fusionUser.id, page));
@@ -44,34 +62,53 @@ const ProfileView = React.createClass({
   getFusionUserEmail() {
     if (this.props.fusionUser && this.props.fusionUser.email) {
       return this.props.fusionUser.email;
-    }
-    else {
+    } else {
       return '';
     }
   },
   getFusionUserHeight() {
-    if (this.props.fusionUser && this.props.fusionUser.height) {
-      return this.props.fusionUser.height;
-    }
-    else {
-      return null;
+    if (this.state && this.state.updatedHeight !== null) {
+      return this.state.updatedHeight.toString();
+    } else if (this.props.fusionUser && this.props.fusionUser.height) {
+      return this.props.fusionUser.height.toString();
+    } else {
+      return '';
     }
   },
   getFusionUserWeight() {
-    if (this.props.fusionUser && this.props.fusionUser.weight) {
-      return this.props.fusionUser.weight;
+    if (this.state && this.state.updatedWeight !== null) {
+      return this.state.updatedWeight.toString();
+    } else if (this.props.fusionUser && this.props.fusionUser.weight) {
+      return this.props.fusionUser.weight.toString();
+    } else {
+      return '';
     }
-    else {
-      return null;
+  },
+  getFusionUserAge() {
+    if (this.state && this.state.updatedAge !== null) {
+      return this.state.updatedAge.toString();
+    } else if (this.props.fusionUser && this.props.fusionUser.age) {
+      return this.props.fusionUser.age.toString();
+    } else {
+      return '';
     }
   },
   getFusionUserLevel() {
     if (this.props.fusionUser && this.props.fusionUser.programLevel) {
       return this.props.fusionUser.programLevel;
-    }
-    else {
+    } else {
       return '';
     }
+  },
+  updateFusionUser(user) {
+    this.props.dispatch(AuthState.updateUserRequest(user));
+  },
+  updatedProfileNotification() {
+    MessageBarManager.showAlert({
+      title: 'Profile has been updated',
+      message: 'Your alert message goes here',
+      viewTopOffset: -300
+    });
   },
 
   render() {
@@ -79,6 +116,7 @@ const ProfileView = React.createClass({
     let userEmail = this.getFusionUserEmail();
     let userHeight = this.getFusionUserHeight();
     let userWeight = this.getFusionUserWeight();
+    let userAge = this.getFusionUserAge();
     let userFusionLevel = this.getFusionUserLevel();
 
     let completedWorkoutsDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -101,8 +139,17 @@ const ProfileView = React.createClass({
                 <View style={[styles.textInputParent, {flexDirection: 'column'}]}>
                   <Text style={styles.text}>Height</Text>
                   <TextInput
-                      style={styles.textEditHalfWidth}
-                      onChangeText={(text) => this.setState({text})}
+                      style={styles.textEditThirdWidth}
+                      keyboardType='numeric'
+                      onEndEditing={() => {
+                        if (this.state.updatedHeight !== null) {
+                          this.props.fusionUser.height = parseFloat(this.state.updatedHeight);
+                          this.setState({...this.state, updatedHeight: null});
+                          this.updateFusionUser(this.props.fusionUser);
+                          this.updatedProfileNotification();
+                        }
+                      }}
+                      onChangeText={(text) => this.setState({...this.state, updatedHeight: text}) }
                       placeholder='Enter height'
                       placeholderTextColor={Colors.spacGold}
                       value={userHeight}/>
@@ -111,11 +158,39 @@ const ProfileView = React.createClass({
                 <View style={[styles.textInputParent, {flexDirection: 'column'}]}>
                   <Text style={styles.text}>Weight</Text>
                   <TextInput
-                      style={[styles.textEditHalfWidth]}
-                      onChangeText={(text) => this.setState({text})}
+                      style={[styles.textEditThirdWidth]}
+                      keyboardType='numeric'
+                      onEndEditing={() => {
+                        if (this.state.updatedWeight !== null) {
+                          this.props.fusionUser.weight = parseFloat(this.state.updatedWeight);
+                          this.setState({...this.state, updatedWeight: null});
+                          this.updateFusionUser(this.props.fusionUser);
+                          this.updatedProfileNotification();
+                        }
+                      }}
+                      onChangeText={(text) => this.setState({...this.state, updatedWeight: text}) }
                       placeholder='Enter weight'
                       placeholderTextColor={Colors.spacGold}
                       value={userWeight}/>
+                </View>
+
+                <View style={[styles.textInputParent, {flexDirection: 'column'}]}>
+                  <Text style={styles.text}>Age</Text>
+                  <TextInput
+                      style={[styles.textEditThirdWidth]}
+                      keyboardType='numeric'
+                      onEndEditing={() => {
+                        if (this.state.updatedAge !== null) {
+                          this.props.fusionUser.age = parseInt(this.state.updatedAge);
+                          this.setState({...this.state, updatedAge: null});
+                          this.updateFusionUser(this.props.fusionUser);
+                          this.updatedProfileNotification();
+                        }
+                      }}
+                      onChangeText={(text) => this.setState({...this.state, updatedAge: text}) }
+                      placeholder='Enter age'
+                      placeholderTextColor={Colors.spacGold}
+                      value={userAge}/>
                 </View>
               </View>
 
@@ -128,7 +203,7 @@ const ProfileView = React.createClass({
               <ListView
                   dataSource={completedWorkoutsDataSource}
                   style={styles.listView}
-                  renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
+                  renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
                   renderRow={(workout) => {
                     let day = moment(workout.completedDate).format('dddd');
                     let date = moment(workout.completedDate).format('MMM Do');
@@ -146,6 +221,7 @@ const ProfileView = React.createClass({
             </Card.Body>
           </Card>
 
+          <MessageBarAlert ref='alert'/>
         </View>
     );
   }
@@ -170,9 +246,9 @@ const styles = StyleSheet.create({
     color: Colors.spacCream,
     fontFamily: Colors.textStyle
   },
-  textEditHalfWidth: {
+  textEditThirdWidth: {
     height: 35,
-    width: width * 0.40,
+    width: width * 0.27,
     backgroundColor: Colors.spacLightGray,
     color: Colors.spacGold,
     fontFamily: Colors.textStyle

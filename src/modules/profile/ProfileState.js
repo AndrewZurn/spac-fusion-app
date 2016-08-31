@@ -6,7 +6,6 @@ var currentPage = 0;
 
 // Initial state
 const initialState = Map({
-  fusionUser: null,
   completedWorkouts: [],
   loading: false
 });
