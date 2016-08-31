@@ -41,7 +41,7 @@ const WorkoutView = React.createClass({
   },
 
   render() {
-    let canUnlockWorkout = this.props.remainingWorkoutUnlocks > 0;
+    let canUnlockWorkout = __DEV__ || this.props.remainingWorkoutUnlocks > 0;
 
     let workoutCard;
     if (this.props.workouts && this.props.workouts.length > 0) {
