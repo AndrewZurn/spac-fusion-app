@@ -27,7 +27,11 @@ const WorkoutCard = React.createClass({
     let descriptionText = WorkoutUtils.getPreviewText(workout);
 
     let exerciseOptionsText = (
-        WorkoutUtils.getExerciseOptions(workout).map(option => option.targetAmount).join(', ')
+        WorkoutUtils.getExerciseOptions(workout).map(option => {
+          if (option.targetAmount) { return option.targetAmount; }
+          else if (option.duration) { return option.duration; }
+          else { return 'Unknown'; }
+        }).join(', ')
     );
 
     let rightButton;

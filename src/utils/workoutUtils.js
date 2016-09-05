@@ -34,7 +34,16 @@ export function getExerciseOptionsText(workout, extendedDescriptions) {
   let exerciseOptions = getExerciseOptions(workout);
   if (extendedDescriptions) {
     exerciseOptions = exerciseOptions.map(option => {
-      return `${option.name} - ${option.targetAmount} ${option.type}`;
+      let amount;
+      if (option.targetAmount) {
+        amount = option.targetAmount;
+      } else if (option.duration) {
+        amount = option.duration;
+      } else {
+        amount = '';
+      }
+
+      return `${option.name} - ${option.type} - ${amount}`;
     });
   } else {
     exerciseOptions = exerciseOptions.map(option => option.name);

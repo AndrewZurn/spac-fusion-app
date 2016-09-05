@@ -18,12 +18,14 @@ const width = Dimensions.get('window').width;
 const WorkoutDetailView = React.createClass({
   propTypes: {
     workouts: PropTypes.array,
-    isStartingWorkout: PropTypes.bool.isRequired, // is a details view or is a view for the workout in progress
+    // is a details view or is a view for the workout in progress
+    isStartingWorkout: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   },
   getInitialState() {
     return {
-      selectedExercises: this._setupSelectedExercises() // should be an {exerciseOptionId, isSelected, {exerciseOptionId, isSelected}}
+      // should be an {exerciseOptionId, isSelected, {exerciseOptionId, isSelected}}
+      selectedExercises: this._setupSelectedExercises()
     };
   },
 
@@ -73,6 +75,16 @@ const WorkoutDetailView = React.createClass({
     this.setState({...this.state, selectedExercises: updatedSelectedExercises});
   },
 
+  _getExerciseOptionAmount(exerciseOption) {
+    if (exerciseOption.targetAmount) {
+      return exerciseOption.targetAmount;
+    } else if (exerciseOption.duration) {
+      return exerciseOption.duration;
+    } else {
+      return '';
+    }
+  },
+
   _createAlternativeOptionCard(exerciseOption, optionId) {
     let alternativeOptionView;
     if (exerciseOption.alternativeExerciseOption) {
@@ -80,6 +92,8 @@ const WorkoutDetailView = React.createClass({
       const altId = alternativeOption.id;
 
       let alternativeOptionDescText = this._getExerciseOptionDescription(alternativeOption, altId);
+
+      let amount = this._getExerciseOptionAmount(alternativeOption);
 
       alternativeOptionView = (
           <View style={{flexDirection: 'row'}}>
@@ -89,7 +103,8 @@ const WorkoutDetailView = React.createClass({
                     key={'radio_button_alt_' + optionId}
                     animation={'bounceIn'}
                     size={14}
-                    isSelected={this._exerciseOptionIsSelected(exerciseOption.id)} // alternativeIsSelected must be true
+                    // the user has selected the alternative option
+                    isSelected={this._exerciseOptionIsSelected(exerciseOption.id)}
                     onPress={() => this._updateSelectedExerciseOption(exerciseOption.id, true)}
                 />
               </View>
@@ -97,7 +112,7 @@ const WorkoutDetailView = React.createClass({
             <View style={[{flexDirection: 'column'}]}>
               <Text style={styles.altTitle} key={'name_' + altId}>Alternative: {alternativeOption.name}</Text>
               <Text style={styles.text}
-                    key={'amt_' + altId}>{alternativeOption.targetAmount} {alternativeOption.type}</Text>
+                    key={'amt_' + altId}>{alternativeOption.type} - {amount}</Text>
               {alternativeOptionDescText}
             </View>
           </View>
@@ -133,6 +148,8 @@ const WorkoutDetailView = React.createClass({
       // get the optional description for display if found
       let exerciseOptionDescriptionText = this._getExerciseOptionDescription(exerciseOption, optionId);
 
+      let amount = this._getExerciseOptionAmount(exerciseOption);
+
       return (
           <Card style={styles.card} key={'card_' + optionId}>
             <Card.Body key={'card_body_' + optionId}>
@@ -143,15 +160,15 @@ const WorkoutDetailView = React.createClass({
                         key={'radio_button_' + optionId}
                         animation={'bounceIn'}
                         size={14}
-                        isSelected={!this._exerciseOptionIsSelected(exerciseOption.id)} // alternativeIsSelected must be false
+                        // the user selected the primary option
+                        isSelected={!this._exerciseOptionIsSelected(exerciseOption.id)}
                         onPress={() => this._updateSelectedExerciseOption(exerciseOption.id, false)}
                     />
                   </View>
                 </View>
                 <View style={[{flexDirection: 'column'}]}>
                   <Text style={styles.workoutTitle} key={'name_' + optionId}>{exerciseOption.name}</Text>
-                  <Text style={styles.text}
-                        key={'amt_' + optionId}>{exerciseOption.targetAmount} {exerciseOption.type}</Text>
+                  <Text style={styles.text} key={'amt_' + optionId}>{exerciseOption.type} - {amount}</Text>
                   {exerciseOptionDescriptionText}
                 </View>
               </View>
