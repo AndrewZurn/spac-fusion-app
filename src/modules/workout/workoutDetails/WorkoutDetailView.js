@@ -17,6 +17,11 @@ import * as WorkoutUtils from '../../../utils/workoutUtils';
 const width = Dimensions.get('window').width;
 const EXERCISE_OPTION_INPUT_WIDTH = 0.87;
 
+const MINUTE_TEXT_VALUE = 'Minute';
+const SECOND_TEXT_VALUE = 'Second';
+const MINUTES_TEXT_VALUE = 'Minutes';
+const SECONDS_TEXT_VALUE = 'Seconds';
+
 const WorkoutDetailView = React.createClass({
   propTypes: {
     workouts: PropTypes.array,
@@ -27,7 +32,8 @@ const WorkoutDetailView = React.createClass({
   getInitialState() {
     return {
       // should be an {exerciseOptionId, isSelected, {exerciseOptionId, isSelected}}
-      selectedExercises: this._setupSelectedExercises()
+      selectedExercises: this._setupSelectedExercises(),
+      timedExerciseOptionIdBeingEdited: null
     };
   },
 
@@ -139,20 +145,20 @@ const WorkoutDetailView = React.createClass({
     return foundOption && foundOption.displayValue ? foundOption.displayValue : '';
   },
 
-  _updateExerciseOptionValue(exerciseOption, value, displayValueAppender, isEndEditing) {
+  _updateExerciseOptionValue(exerciseOptionId, value, displayValueAppender, isEndEditing) {
     let updatedExerciseOptions = this.state.selectedExercises.map(option => {
-      if (option.exerciseOptionId === exerciseOption.id) {
+      if (option.exerciseOptionId === exerciseOptionId) {
         let updatedDisplayValue;
         if (!isEndEditing) { // is still changing the value
           updatedDisplayValue = value;
-        } else if (value && value.length > 0) { // is done changing the value
-          updatedDisplayValue = `${value} ${displayValueAppender}`;
+        } else if (value && value.length > 0) { // is done changing the value, displayValueAppender should have space prefixed if needed.
+          updatedDisplayValue = `${value}${displayValueAppender}`;
         } else { // there is no value to display (value is also null or empty)
           updatedDisplayValue = null;
         }
 
         return {
-          exerciseOptionId: exerciseOption.id,
+          exerciseOptionId,
           alternativeIsSelected: option.alternativeIsSelected,
           altExerciseOptionId: option.altExerciseOptionId,
           displayValue: updatedDisplayValue,
@@ -170,12 +176,17 @@ const WorkoutDetailView = React.createClass({
     if (exerciseOption.inputType === 'time') {
       return (
           <Button
-              text='Enter Timed Results'
+              text={this._getTimedButtonText(exerciseOption.id)}
               raised={true}
-              overrides={styles.timedResultsButton}
+              overrides={{
+                textColor: Colors.spacGold,
+                backgroundColor: Colors.spacMediumGray,
+                rippleColor: Colors.spacLightGray
+              }}
               onPress={() => {
                 if (exerciseOption.inputType === 'time' && this.picker) {
                   this.picker.toggle();
+                  this.setState({...this.state, timedExerciseOptionIdBeingEdited: exerciseOption.id});
                 }
               }}
           />
@@ -186,11 +197,11 @@ const WorkoutDetailView = React.createClass({
       let resultsDisplayFieldName;
       let resultsDisplayFieldAppender; // should be applied to the value of the field when entered/present (and not being edited)
       if (exerciseOption.type.toUpperCase() === 'HEAVY') {
-        resultsDisplayFieldName = 'Weight';
+        resultsDisplayFieldName = ' Weight';
         resultsDisplayFieldAppender = 'lbs';
       } else {
         resultsDisplayFieldName = 'Repetitions';
-        resultsDisplayFieldAppender = 'Reps';
+        resultsDisplayFieldAppender = ' Reps';
       }
 
       let resultsPlaceholderText = `Enter ${resultsDisplayFieldName}`;
@@ -202,13 +213,13 @@ const WorkoutDetailView = React.createClass({
                 // different displayValue when done editing to display something like (ie '50 Reps' or '200 lbs')
                 onEndEditing={() => { // done dditing, add the appender to use as the displayValue
                   let value = this._getExerciseOption(exerciseOption.id).value;
-                  this._updateExerciseOptionValue(exerciseOption, value, resultsDisplayFieldAppender, true);
+                  this._updateExerciseOptionValue(exerciseOption.id, value, resultsDisplayFieldAppender, true);
                 }}
                 onFocus={() => { // reset the text box to use just the value (and not the displayValue)
                   let value = this._getExerciseOption(exerciseOption.id).value
-                  this._updateExerciseOptionValue(exerciseOption, value, value, false);
+                  this._updateExerciseOptionValue(exerciseOption.id, value, value, false);
                 }}
-                onChangeText={(text) => this._updateExerciseOptionValue(exerciseOption, text, null, false) }
+                onChangeText={(text) => this._updateExerciseOptionValue(exerciseOption.id, text, '', false) }
                 placeholder={resultsPlaceholderText}
                 placeholderTextColor={Colors.spacGold}
                 value={this._getExerciseOptionDisplayValue(exerciseOption.id)}/>
@@ -287,15 +298,13 @@ const WorkoutDetailView = React.createClass({
             {exerciseOptionsCards}
           </ScrollView>
 
-          // picker for timed based results (displays minutes and seconds)
+          {/* // picker for timed based results (displays minutes and seconds)*/}
           <Picker
               ref={picker => {
                 this.picker = picker;
                 return;
               }}
-              style={{
-                height: 280
-              }}
+              style={{height: 280}}
               pickerElevation={100}
               pickerTitle={'Completed In'}
               pickerCancelBtnText={'Close'}
@@ -304,17 +313,40 @@ const WorkoutDetailView = React.createClass({
               pickerToolBarStyle={{backgroundColor: Colors.spacMediumGray, height: 35}}
               pickerTitleStyle={styles.altTitle}
               pickerData={[this._getMinutesArray(), this._getSecondsArray()]} //picker`s value List
-              selectedValue={['0 Minutes', '1 Seconds']} //default to be selected value
-              onPickerDone={(value) => console.log(`My picked value is ${value}`)}
+              selectedValue={[`0 ${MINUTES_TEXT_VALUE}`, `0 ${SECONDS_TEXT_VALUE}`]} //default to be selected value
+              onPickerDone={(value) => {
+                let parsedPickerValue = this._parseValueFromTimedBasedExerciseResult(value);
+                this._updateExerciseOptionValue(this.state.timedExerciseOptionIdBeingEdited, parsedPickerValue, '', true);
+              }}
           />
         </View>
     );
   },
 
+  _parseValueFromTimedBasedExerciseResult(value) {
+    let minutes = value[0];
+    let seconds = value[1];
+
+    if (!minutes.includes(MINUTE_TEXT_VALUE) || !minutes.includes(MINUTES_TEXT_VALUE)) {
+      minutes = minutes === '1' ? `${minutes} ${MINUTE_TEXT_VALUE}` : `${minutes} ${MINUTES_TEXT_VALUE}`;
+    }
+
+    if (!seconds.includes(SECOND_TEXT_VALUE) || !seconds.includes(SECONDS_TEXT_VALUE)) {
+      seconds = seconds === '1' ? `${seconds} ${SECOND_TEXT_VALUE}` : `${seconds} ${SECONDS_TEXT_VALUE}`;
+    }
+
+    return `${minutes} ${seconds}`;
+  },
+
+  _getTimedButtonText(exerciseOptionId) {
+    let foundOption = this._getExerciseOption(exerciseOptionId);
+    return foundOption && foundOption.displayValue ? foundOption.displayValue : 'Enter Timed Results';
+  },
+
   _getMinutesArray() {
     return [...Array(31).keys()].map(i => {
       if (i % 10 === 0) {
-        return `${i} Minutes`;
+        return `${i} ${MINUTES_TEXT_VALUE}`;
       } else {
         return `${i}`;
       }
@@ -324,9 +356,9 @@ const WorkoutDetailView = React.createClass({
   _getSecondsArray() {
     return [...Array(60).keys()].map(i => {
       if (i % 10 === 0) {
-        return `${i + 1} Seconds`;
+        return `${i} ${SECONDS_TEXT_VALUE}`;
       } else {
-        return `${i + 1}`;
+        return `${i}`;
       }
     });
   }
@@ -381,11 +413,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderBottomColor: Colors.spacGold,
     borderBottomWidth: 1
-  },
-  timedResultsButton: {
-    textColor: Colors.spacGold,
-    backgroundColor: Colors.spacMediumGray,
-    rippleColor: Colors.spacLightGray
   },
   scrollView: {
     flex: 1
