@@ -2,6 +2,7 @@
 const {Platform} = require('react-native');
 
 module.exports = {
+  defaultButtonColor: '#2C98F0',
   spacGold: '#d29941',
   spacTan: '#c0b38e',
   spacCream: '#ece4ce',

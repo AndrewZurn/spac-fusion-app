@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {
+    Alert,
     Dimensions,
     StyleSheet,
     ScrollView,
@@ -27,6 +28,7 @@ const WorkoutDetailView = React.createClass({
     workouts: PropTypes.array,
     // is a details view or is a view for the workout in progress
     isStartingWorkout: PropTypes.bool.isRequired,
+    fusionUser: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired
   },
   getInitialState() {
@@ -35,6 +37,11 @@ const WorkoutDetailView = React.createClass({
       selectedExercises: this._setupSelectedExercises(),
       timedExerciseOptionIdBeingEdited: null
     };
+  },
+  _saveCompletedWorkout(completedExerciseResults) {
+    let workoutId = this._getWorkoutFromProps().id;
+    let userId = this.props.fusionUser.id;
+    this.props.dispatch(WorkoutState.saveCompletedWorkout(completedExerciseResults, userId, workoutId));
   },
 
   _setupSelectedExercises() {
@@ -179,7 +186,7 @@ const WorkoutDetailView = React.createClass({
               text={this._getTimedButtonText(exerciseOption.id)}
               raised={true}
               overrides={{
-                textColor: Colors.spacGold,
+                textColor: Colors.defaultButtonColor,
                 backgroundColor: Colors.spacMediumGray,
                 rippleColor: Colors.spacLightGray
               }}
@@ -228,11 +235,12 @@ const WorkoutDetailView = React.createClass({
     }
   },
 
+  _getWorkoutFromProps() {
+    return this.props.workouts && this.props.workouts.length > 0 ? this.props.workouts[0] : null;
+  },
+
   render() {
-    let workout;
-    if (this.props.workouts && this.props.workouts.length > 0) {
-      workout = this.props.workouts[0];
-    }
+    let workout = this._getWorkoutFromProps();
 
     let duration = WorkoutUtils.getDuration(workout);
     let workoutDescription = WorkoutUtils.getExerciseInstructions(workout);
@@ -298,6 +306,19 @@ const WorkoutDetailView = React.createClass({
             {exerciseOptionsCards}
           </ScrollView>
 
+          <View style={{marginTop: 4, marginBottom: 4}}>
+            <Button
+                text='Complete Workout'
+                raised={true}
+                overrides={{
+                  textColor: Colors.defaultButtonColor,
+                  backgroundColor: Colors.spacLightGray,
+                  rippleColor: Colors.spacMediumGray
+                }}
+                onPress={this._submitCompletedWorkout}
+            />
+          </View>
+
           {/* // picker for timed based results (displays minutes and seconds)*/}
           <Picker
               ref={picker => {
@@ -320,6 +341,38 @@ const WorkoutDetailView = React.createClass({
               }}
           />
         </View>
+    );
+  },
+
+  _submitCompletedWorkout() {
+    let incompletedExerciseIds = this.state.selectedExercises
+        .filter(option => option.value === null)
+        .map(option => option.exerciseOptionId);
+    if (incompletedExerciseIds.length > 0) {
+      this._incompletedWorkoutAlert(incompletedExerciseIds);
+    } else {
+      let completedWorkoutRequestBody = this.state.selectedExercises.map(option => {
+        let selectedOptionId = option.alternativeIsSelected ? option.altExerciseOptionId : option.exerciseOptionId;
+        return {
+          exerciseOptionId: selectedOptionId,
+          result: option.value
+        };
+      });
+
+      this._saveCompletedWorkout(completedWorkoutRequestBody);
+    }
+  },
+
+  _incompletedWorkoutAlert(incompletedExerciseIds) {
+    let workout = this._getWorkoutFromProps();
+    let incompleteExerciseNames = WorkoutUtils.getExerciseOptions(workout)
+        .filter(option => incompletedExerciseIds.includes(option.id))
+        .map(option => option.name)
+        .join(', ');
+    Alert.alert(
+        'Cannot Submit Incompleted Workout',
+        `Please provide your results for the following exercises: ${incompleteExerciseNames}`,
+        [{text: 'OK', onPress: () => console.log('OK Pressed')}]
     );
   },
 

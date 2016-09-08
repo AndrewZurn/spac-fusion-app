@@ -8,7 +8,10 @@ const CAN_USER_UNLOCK_WORKOUT = fusionUserId => USER_BY_ID_PATH(fusionUserId) + 
 const USER_BY_AUTH0_ID_PATH = auth0UserId => USERS_BASE_PATH + `/auth0/${auth0UserId}`;
 const GET_COMPLETED_WORKOUTS_PATH = (fusionUserId, page) => {
   return USER_BY_ID_PATH(fusionUserId) + `/workouts?page=${page}&pageSize=10`;
-}
+};
+const SAVE_COMPLETED_WORKOUTS_PATH = (fusionUserId, workoutId) => {
+  return USER_BY_ID_PATH(fusionUserId) + `/workouts/${workoutId}`;
+};
 
 export async function getUser(userId) {
   return api.get(USER_BY_ID_PATH(userId), API_FAILED_REQUEST_WARNING)
@@ -35,7 +38,23 @@ export async function getCompletedWorkouts(fusionUserId, page) {
 }
 
 export async function updateUser(user) {
-  return api.put(USER_BY_ID_PATH(user.id), user, true)
+  return api.put(USER_BY_ID_PATH(user.id), user, API_FAILED_REQUEST_WARNING)
       .then(response => response.body)
+      .catch(error => console.error(`Error during updateUser. Error: ${error}`));
+}
+
+export async function saveCompletedWorkout(completedExerciseResults, userId, workoutId) {
+  return api.post(
+      SAVE_COMPLETED_WORKOUTS_PATH(userId, workoutId),
+      {results: completedExerciseResults},
+      API_FAILED_REQUEST_WARNING
+  )
+      .then(response => {
+        let didSaveCompletedWorkout = response.status === 201;
+        return {
+          didSaveCompletedWorkout,
+          saveCompletedWorkoutErrors: [] // figure out what errors to pull here.
+        };
+      })
       .catch(error => console.error(`Error during updateUser. Error: ${error}`));
 }

@@ -9,20 +9,20 @@ let baseConfig = {
 
 let localConfig = Map({
   ...baseConfig,
-  API_FAILED_REQUEST_WARNING_MESSAGE: true,
+  API_FAILED_REQUEST_WARNING_MESSAGE: false,
   API_ROOT: 'http://localhost:8080'
 });
 
 let devConfig = Map({
   ...baseConfig,
-  API_FAILED_REQUEST_WARNING_MESSAGE: true,
+  API_FAILED_REQUEST_WARNING_MESSAGE: false,
   API_ROOT: 'http://spac-fusion-api.us-west-2.elasticbeanstalk.com'
 });
 
 let prodConfig = Map({
   ...baseConfig,
-  API_FAILED_REQUEST_WARNING_MESSAGE: false,
-  API_ROOT: 'http://SOME_PROD_HOST:8080'
+  API_FAILED_REQUEST_WARNING_MESSAGE: true,
+  API_ROOT: 'http://spac-fusion-api.us-west-2.elasticbeanstalk.com'
 });
 
 let configuration = getConfig();

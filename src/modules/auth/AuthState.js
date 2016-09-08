@@ -3,6 +3,7 @@ import {loop, Effects} from 'redux-loop';
 import * as UserService from '../../services/userService';
 
 const _TEST_AUTH0_USER_ID = '123454321';
+const _FUSION_USER_ID = 'ba729f5c-9781-4d88-bca7-f5098930eff7';
 
 // Initial state
 const initialState = Map({
@@ -37,6 +38,7 @@ export function onUserLoginError(error) {
   return {
     type: USER_LOGIN_ERROR,
     payload: error,
+    testFusionUserId: _FUSION_USER_ID,
     error: true
   };
 }
@@ -87,7 +89,8 @@ export default function AuthStateReducer(state = initialState, action = {}) {
       );
 
     case USER_LOGIN_ERROR:
-      return initialState;
+      // used to bypass login and use a default created user
+      return state.set('fusionUser', {id: action.testFusionUserId});
 
     case GET_FUSION_USER_REQUEST:
       return loop(
