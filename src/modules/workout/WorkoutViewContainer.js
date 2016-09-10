@@ -6,6 +6,8 @@ export default connect(
       workouts: state.getIn(['workoutState', 'workouts']),
       todaysWorkout: state.getIn(['workoutState', 'todaysWorkout']),
       remainingWorkoutUnlocks: state.getIn(['workoutState', 'remainingWorkoutUnlocks']),
+      completedWorkout: state.getIn(['workoutState', 'completedWorkout']),
+      didSaveCompletedWorkout: state.getIn(['workoutState', 'didSaveCompletedWorkout']),
       fusionUser: state.getIn(['auth', 'fusionUser'])
     })
 )(WorkoutView);

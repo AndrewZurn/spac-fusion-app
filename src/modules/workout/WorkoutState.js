@@ -8,7 +8,7 @@ const initialState = Map({
   workouts: [],
   remainingWorkoutUnlocks: null,
   isStartingWorkout: false,
-  didSaveCompletedWorkout: false,
+  completedWorkout: null,
   saveCompletedWorkoutErrors: [],
   loading: false
 });
@@ -22,6 +22,9 @@ const GET_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_WORKOUT_RESPONSE';
 
 const GET_TODAYS_WORKOUT_REQUEST = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_REQUEST';
 const GET_TODAYS_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_RESPONSE';
+
+const GET_COMPLETED_WORKOUT_REQUEST = 'WORKOUT_STATE/GET_COMPLETED_WORKOUT_REQUEST';
+const GET_COMPLETED_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_COMPLETED_WORKOUT_RESPONSE';
 
 const GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST';
 const GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE';
@@ -37,14 +40,15 @@ export function getWorkouts() {
 }
 
 export function getWorkout(id) {
-  return {
-    type: GET_WORKOUT_REQUEST,
-    id
-  };
+  return {type: GET_WORKOUT_REQUEST, id};
 }
 
-export function getTodaysWorkout() {
-  return {type: GET_TODAYS_WORKOUT_REQUEST};
+export function getTodaysWorkout(userId) {
+  return {type: GET_TODAYS_WORKOUT_REQUEST, userId};
+}
+
+export function getCompletedWorkout(userId, workoutId) {
+  return {type: GET_COMPLETED_WORKOUT_REQUEST, userId, workoutId};
 }
 
 export function getRemainingWorkoutUnlocks(userId) {
@@ -92,10 +96,19 @@ export async function requestGetWorkout(id) {
   };
 }
 
-export async function requestGetTodaysWorkout() {
+export async function requestGetTodaysWorkout(userId) {
   return {
     type: GET_TODAYS_WORKOUT_RESPONSE,
+    userId,
     payload: await WorkoutService.getTodaysWorkout(),
+    receivedAt: Date.now()
+  };
+}
+
+export async function requestGetCompletedWorkout(userId, workoutId) {
+  return {
+    type: GET_COMPLETED_WORKOUT_RESPONSE,
+    payload: await UserService.getCompletedWorkout(userId, workoutId),
     receivedAt: Date.now()
   };
 }
@@ -136,7 +149,13 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
     case GET_TODAYS_WORKOUT_REQUEST:
       return loop(
           state.set('loading', true),
-          Effects.promise(requestGetTodaysWorkout)
+          Effects.promise(requestGetTodaysWorkout, action.userId)
+      );
+
+    case GET_COMPLETED_WORKOUT_REQUEST:
+      return loop(
+          state.set('loading', true),
+          Effects.promise(getCompletedWorkout, action.userId, action.workoutId)
       );
 
     case GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST:
@@ -166,9 +185,15 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
           .set('workouts', [action.payload]);
 
     case GET_TODAYS_WORKOUT_RESPONSE:
+      return loop(
+          state.set('workouts', [action.payload]),
+          Effects.promise(requestGetCompletedWorkout, action.userId, action.payload.id)
+      );
+
+    case GET_COMPLETED_WORKOUT_RESPONSE:
       return state
           .set('loading', false)
-          .set('workouts', [action.payload]);
+          .set('completedWorkout', action.payload.completedWorkout);
 
     case GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE:
       return state
@@ -177,8 +202,9 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
 
     case SAVE_COMPLETED_WORKOUT_RESPONSE:
       return state
+          .update('remainingWorkoutUnlocks', value => value - 1)
           .set('loading', false)
-          .set('didSaveCompletedWorkout', action.payload.didSaveCompletedWorkout)
+          .set('completedWorkout', action.payload.completedWorkout)
           .set('saveCompletedWorkoutErrors', action.payload.saveCompletedWorkoutErrors);
 
     default:

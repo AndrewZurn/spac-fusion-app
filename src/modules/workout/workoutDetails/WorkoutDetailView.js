@@ -33,8 +33,8 @@ const WorkoutDetailView = React.createClass({
     isStartingWorkout: PropTypes.bool.isRequired,
     fusionUser: PropTypes.object.isRequired,
     loading: PropTypes.bool.isRequired,
-    saveCompletedWorkoutErrors: PropTypes.array.isRequired,
-    didSaveCompletedWorkout: PropTypes.bool.isRequired,
+    saveCompletedWorkoutErrors: PropTypes.array,
+    completedWorkout: PropTypes.object,
     dispatch: PropTypes.func.isRequired
   },
   getInitialState() {
@@ -52,12 +52,12 @@ const WorkoutDetailView = React.createClass({
     }
   },
   _closeViewIfWorkoutSuccessfullySaved() {
-    if (this.props.didSaveCompletedWorkout) {
+    if (this.props.completedWorkout) {
       Alert.alert(
           'Your Workout Was Saved',
           'You can view completed workouts from your profile, or adjust ' +
           'today\'s workout by going to the \'Workout\' tab.',
-          [{text: 'OK', onPress: () => this.props.dispatch(NavigationState.popRoute()) }]
+          [{text: 'OK', onPress: () => this.props.dispatch(NavigationState.popRoute())}]
       );
     }
   },
@@ -246,7 +246,7 @@ const WorkoutDetailView = React.createClass({
                   this._updateExerciseOptionValue(exerciseOption.id, value, resultsDisplayFieldAppender, true);
                 }}
                 onFocus={() => { // reset the text box to use just the value (and not the displayValue)
-                  let value = this._getExerciseOption(exerciseOption.id).value
+                  let value = this._getExerciseOption(exerciseOption.id).value;
                   this._updateExerciseOptionValue(exerciseOption.id, value, value, false);
                 }}
                 onChangeText={(text) => this._updateExerciseOptionValue(exerciseOption.id, text, '', false) }
@@ -399,7 +399,7 @@ const WorkoutDetailView = React.createClass({
     Alert.alert(
         'Cannot Submit Incompleted Workout',
         `Please provide your results for the following exercises: ${incompleteExerciseNames}`,
-        [{text: 'OK', onPress: () => console.log('OK Pressed')}]
+        [{text: 'OK', onPress: () => console.log('Incomplete workouts OK button Pressed')}]
     );
   },
 

@@ -81,7 +81,7 @@ export async function requestGetWorkout(id) {
 export async function requestGetTodaysWorkout() {
   return {
     type: GET_TODAYS_WORKOUT_RESPONSE,
-    payload: await WorkoutService.getTodaysWorkout(),
+    payload: await WorkoutService._getTodaysWorkout(),
     receivedAt: Date.now()
   };
 }

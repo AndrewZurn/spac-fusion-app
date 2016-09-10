@@ -18,30 +18,39 @@ const WorkoutView = React.createClass({
     workouts: PropTypes.array.isRequired,
     remainingWorkoutUnlocks: PropTypes.number.isRequired,
     fusionUser: PropTypes.object.isRequired,
+    completedWorkout: PropTypes.object,
+    didSaveCompletedWorkout: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   },
-  getTodaysWorkout() {
-    this.props.dispatch(WorkoutState.getTodaysWorkout()); // should set today's workout as head of 'workouts'
+  _getTodaysWorkout() {
+    if (this.props.fusionUser) {
+      // should set today's workout as head of 'workouts'
+      this.props.dispatch(WorkoutState.getTodaysWorkout(this.props.fusionUser.id));
+    }
   },
-  getRemainingWorkoutUnlocks() {
+  _getRemainingWorkoutUnlocks() {
     if (this.props.fusionUser) {
       this.props.dispatch(WorkoutState.getRemainingWorkoutUnlocks(this.props.fusionUser.id));
     }
   },
   setupForWorkout() {
-    this.getTodaysWorkout();
-    this.getRemainingWorkoutUnlocks();
-  },
-  setupForWorkoutDetails() {
-    this.props.dispatch(WorkoutState.setupForWorkoutDetails(false));
+    this._getTodaysWorkout();
+    this._getRemainingWorkoutUnlocks();
   },
   openWorkoutDetail() {
+    this.props.dispatch(WorkoutState.setupForWorkoutDetails(true));
     let title = WorkoutUtils.getName(this.props.workouts[0]);
     this.props.dispatch(NavigationState.pushRoute({key: 'DetailsForWorkout', title}));
   },
 
   render() {
-    let canUnlockWorkout = __DEV__ || this.props.remainingWorkoutUnlocks > 0;
+    let canUnlockWorkout = this.props.remainingWorkoutUnlocks > 0 || this.props.completedWorkout;
+    let unlockWorkoutButtonText;
+    if (this.props.remainingWorkoutUnlocks > 0 && !this.props.completedWorkout) {
+      unlockWorkoutButtonText = 'Start Workout';
+    } else { // this.props.completedWorkout (had previously saved workout)
+      unlockWorkoutButtonText = 'Edit Completed Workout';
+    }
 
     let workoutCard;
     if (this.props.workouts && this.props.workouts.length > 0) {
@@ -49,11 +58,9 @@ const WorkoutView = React.createClass({
           <WorkoutCard workout={this.props.workouts[0]}
                        displayDay={false}
                        displayRightButton={canUnlockWorkout}
-                       displayRightButtonText={'Start Workout'}
-                       rightButtonAction={() => {
-                         this.setupForWorkoutDetails();
-                         this.openWorkoutDetail();
-                       }}/>
+                       displayRightButtonText={unlockWorkoutButtonText}
+                       rightButtonAction={this.openWorkoutDetail}
+          />
       );
     }
 

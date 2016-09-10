@@ -8,6 +8,6 @@ export default connect(
       isStartingWorkout: state.getIn(['workoutState', 'isStartingWorkout']),
       loading: state.getIn(['workoutState', 'loading']),
       saveCompletedWorkoutErrors: state.getIn(['workoutState', 'saveCompletedWorkoutErrors']),
-      didSaveCompletedWorkout: state.getIn(['workoutState', 'didSaveCompletedWorkout'])
+      completedWorkout: state.getIn(['workoutState', 'completedWorkout'])
     })
 )(WorkoutDetailsView);

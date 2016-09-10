@@ -22,13 +22,13 @@ const WorkoutView = React.createClass({
     dispatch: PropTypes.func.isRequired
   },
   getTodaysWorkout() {
-    this.props.dispatch(WorkoutState.getTodaysWorkout()); // should set today's workout as head of 'workouts'
+    this.props.dispatch(WorkoutState._getTodaysWorkout()); // should set today's workout as head of 'workouts'
   },
   canUnlockWorkout() {
     this.props.dispatch(WorkoutState.canUnlockWorkout(TEST_USER_ID));
   },
   setupForWorkout() {
-    this.getTodaysWorkout();
+    this._getTodaysWorkout();
     this.canUnlockWorkout(TEST_USER_ID);
   },
   setupForWorkoutDetails() {

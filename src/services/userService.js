@@ -9,7 +9,7 @@ const USER_BY_AUTH0_ID_PATH = auth0UserId => USERS_BASE_PATH + `/auth0/${auth0Us
 const GET_COMPLETED_WORKOUTS_PATH = (fusionUserId, page) => {
   return USER_BY_ID_PATH(fusionUserId) + `/workouts?page=${page}&pageSize=10`;
 };
-const SAVE_COMPLETED_WORKOUTS_PATH = (fusionUserId, workoutId) => {
+const COMPLETED_WORKOUTS_PATH = (fusionUserId, workoutId) => {
   return USER_BY_ID_PATH(fusionUserId) + `/workouts/${workoutId}`;
 };
 
@@ -34,7 +34,18 @@ export async function getUserByAuth0Id(auth0UserId) {
 export async function getCompletedWorkouts(fusionUserId, page) {
   return api.get(GET_COMPLETED_WORKOUTS_PATH(fusionUserId, page), API_FAILED_REQUEST_WARNING)
       .then(response => response.body)
-      .catch(error => console.error(`Error during getUser. Error: ${error}`));
+      .catch(error => console.error(`Error during getCompletedWorkouts. Error: ${error}`));
+}
+
+export async function getCompletedWorkout(fusionUserId, workoutId) {
+  return api.get(COMPLETED_WORKOUTS_PATH(fusionUserId, workoutId), API_FAILED_REQUEST_WARNING)
+      .then(response => {
+        if (response.status === 200) {
+          return {completedWorkout: response.body};
+        } else {
+          return {completedWorkout: null};
+        }
+      }).catch(error => console.error(`Error during getCompletedWorkout. Error: ${error}`));
 }
 
 export async function updateUser(user) {
@@ -45,16 +56,14 @@ export async function updateUser(user) {
 
 export async function saveCompletedWorkout(completedExerciseResults, userId, workoutId) {
   return api.post(
-      SAVE_COMPLETED_WORKOUTS_PATH(userId, workoutId),
+      COMPLETED_WORKOUTS_PATH(userId, workoutId),
       {results: completedExerciseResults},
       API_FAILED_REQUEST_WARNING
-  )
-      .then(response => {
-        let didSaveCompletedWorkout = response.status === 201;
-        return {
-          didSaveCompletedWorkout,
-          saveCompletedWorkoutErrors: [] // figure out what errors to pull here.
-        };
-      })
-      .catch(error => console.error(`Error during updateUser. Error: ${error}`));
+  ).then(response => {
+    if (response.status === 201) {
+      return {completedWorkout: response.body};
+    } else {
+      return {completedWorkout: null};
+    }
+  }).catch(error => console.error(`Error during updateUser. Error: ${error}`));
 }
