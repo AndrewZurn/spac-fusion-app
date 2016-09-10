@@ -8,6 +8,8 @@ const initialState = Map({
   workouts: [],
   remainingWorkoutUnlocks: null,
   isStartingWorkout: false,
+  didSaveCompletedWorkout: false,
+  saveCompletedWorkoutErrors: [],
   loading: false
 });
 

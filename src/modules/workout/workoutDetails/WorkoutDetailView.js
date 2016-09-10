@@ -14,7 +14,10 @@ import Picker from 'react-native-picker';
 import RadioButton from 'react-native-radio-button';
 import * as WorkoutState from '../WorkoutState';
 import * as WorkoutUtils from '../../../utils/workoutUtils';
+import * as NavigationState from '../../navigation/NavigationState';
 
+const BusyIndicator = require('react-native-busy-indicator');
+const loaderHandler = require('react-native-busy-indicator/LoaderHandler');
 const width = Dimensions.get('window').width;
 const EXERCISE_OPTION_INPUT_WIDTH = 0.87;
 
@@ -29,6 +32,9 @@ const WorkoutDetailView = React.createClass({
     // is a details view or is a view for the workout in progress
     isStartingWorkout: PropTypes.bool.isRequired,
     fusionUser: PropTypes.object.isRequired,
+    loading: PropTypes.bool.isRequired,
+    saveCompletedWorkoutErrors: PropTypes.array.isRequired,
+    didSaveCompletedWorkout: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
   },
   getInitialState() {
@@ -37,6 +43,23 @@ const WorkoutDetailView = React.createClass({
       selectedExercises: this._setupSelectedExercises(),
       timedExerciseOptionIdBeingEdited: null
     };
+  },
+  _displayLoadingIndicatorWhenLoading() {
+    if (this.props.loading) {
+      loaderHandler.showLoader('Loading');
+    } else {
+      loaderHandler.hideLoader();
+    }
+  },
+  _closeViewIfWorkoutSuccessfullySaved() {
+    if (this.props.didSaveCompletedWorkout) {
+      Alert.alert(
+          'Your Workout Was Saved',
+          'You can view completed workouts from your profile, or adjust ' +
+          'today\'s workout by going to the \'Workout\' tab.',
+          [{text: 'OK', onPress: () => this.props.dispatch(NavigationState.popRoute()) }]
+      );
+    }
   },
   _saveCompletedWorkout(completedExerciseResults) {
     let workoutId = this._getWorkoutFromProps().id;
@@ -240,6 +263,9 @@ const WorkoutDetailView = React.createClass({
   },
 
   render() {
+    this._displayLoadingIndicatorWhenLoading();
+    this._closeViewIfWorkoutSuccessfullySaved();
+
     let workout = this._getWorkoutFromProps();
 
     let duration = WorkoutUtils.getDuration(workout);
@@ -340,6 +366,7 @@ const WorkoutDetailView = React.createClass({
                 this._updateExerciseOptionValue(this.state.timedExerciseOptionIdBeingEdited, parsedPickerValue, '', true);
               }}
           />
+          <BusyIndicator />
         </View>
     );
   },
