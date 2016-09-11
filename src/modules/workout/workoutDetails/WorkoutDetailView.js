@@ -41,7 +41,8 @@ const WorkoutDetailView = React.createClass({
     return {
       // should be an {exerciseOptionId, isSelected, {exerciseOptionId, isSelected}}
       selectedExercises: this._setupSelectedExercises(),
-      timedExerciseOptionIdBeingEdited: null
+      timedExerciseOptionIdBeingEdited: null,
+      workoutSubmitted: false
     };
   },
   _displayLoadingIndicatorWhenLoading() {
@@ -52,13 +53,14 @@ const WorkoutDetailView = React.createClass({
     }
   },
   _closeViewIfWorkoutSuccessfullySaved() {
-    if (this.props.completedWorkout) {
+    if (this.props.completedWorkout && this.state.workoutSubmitted) {
       Alert.alert(
           'Your Workout Was Saved',
           'You can view completed workouts from your profile, or adjust ' +
           'today\'s workout by going to the \'Workout\' tab.',
           [{text: 'OK', onPress: () => this.props.dispatch(NavigationState.popRoute())}]
       );
+      this.setState({...this.state, workoutSubmitted: false});
     }
   },
   _saveCompletedWorkout(completedExerciseResults) {
@@ -75,14 +77,43 @@ const WorkoutDetailView = React.createClass({
         altExerciseOptionId = exerciseOption.alternativeExerciseOption.id;
       }
 
+      let {lookupId, value, displayValue} = this._getCompletedOptionValues(exerciseOption);
+
       return {
+        lookupId,
         exerciseOptionId: exerciseOption.id,
         alternativeIsSelected: false,
         altExerciseOptionId,
-        displayValue: null,
-        value: null
+        displayValue: displayValue,
+        value: value
       };
     });
+  },
+
+  /**
+   * If a workout has already been completed, it will find the saved value/result for the
+   * exercise option, and return both it's value, and it's display value, and it's lookupId.
+   *
+   * @param option The current option to find in the results lists and to find the saved result of.
+   * @returns If the workout hasn't been completed it will return null,
+   *          otherwise it will return the {lookupId, value, displayValue}.
+   * @private
+   */
+  _getCompletedOptionValues(option) {
+    let lookupId;
+    let value;
+    let displayValue;
+    if (this.props.completedWorkout) {
+      let lookup = this.props.completedWorkout.results
+          .find(result => option.id === result.exerciseOptionId ||
+          option.alternativeExerciseOption && option.alternativeExerciseOption.id === result.exerciseOptionId);
+
+      // if it was a rep based workout remove the value, else allow the minute/second value to be saved to {value: _}
+      displayValue = lookup.result;
+      value = option.inputType !== 'time' ? lookup.result.split(' ')[0] : lookup.result;
+      lookupId = lookup.lookupId;
+    }
+    return {lookupId, value, displayValue};
   },
 
   _exerciseOptionIsSelected(exerciseOptionId) {
@@ -381,12 +412,14 @@ const WorkoutDetailView = React.createClass({
       let completedWorkoutRequestBody = this.state.selectedExercises.map(option => {
         let selectedOptionId = option.alternativeIsSelected ? option.altExerciseOptionId : option.exerciseOptionId;
         return {
+          lookupId: option.lookupId,
           exerciseOptionId: selectedOptionId,
-          result: option.value
+          result: option.displayValue
         };
       });
 
       this._saveCompletedWorkout(completedWorkoutRequestBody);
+      this.setState({...this.state, workoutSubmitted: true});
     }
   },
 
