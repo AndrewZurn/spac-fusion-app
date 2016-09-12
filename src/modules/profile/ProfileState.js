@@ -33,11 +33,7 @@ export async function requestGetUseByAuth0Id(auth0UserId) {
 }
 
 export function getFusionUserCompletedWorkouts(fusionUserId, page) {
-  return {
-    type: GET_COMPLETED_WORKOUTS_REQUEST,
-    fusionUserId,
-    page
-  };
+  return {type: GET_COMPLETED_WORKOUTS_REQUEST, fusionUserId, page};
 }
 
 export async function requestUserCompletedWorkouts(fusionUserId, page) {
@@ -67,7 +63,7 @@ export default function ProfileStateReducer(state = initialState, action = {}) {
     case GET_COMPLETED_WORKOUTS_REQUEST:
       return loop(
           state.set('loading', true),
-          Effects.promise(getFusionUserCompletedWorkouts, action.fusionUserId, action.page)
+          Effects.promise(requestUserCompletedWorkouts, action.fusionUserId, action.page)
       );
 
     case GET_COMPLETED_WORKOUTS_RESPONSE:

@@ -4,10 +4,10 @@ import {
     StyleSheet,
     Text
 } from 'react-native';
-import * as WorkoutState from './WorkoutState';
 import Colors from '../../utils/colors';
 import * as NavigationState from '../../modules/navigation/NavigationState';
 import WorkoutCard from '../../components/WorkoutCard';
+import * as WorkoutState from './WorkoutState';
 import * as WorkoutUtils from '../../utils/workoutUtils';
 
 /**

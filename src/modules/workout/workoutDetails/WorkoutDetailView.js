@@ -70,18 +70,20 @@ const WorkoutDetailView = React.createClass({
   },
 
   _setupSelectedExercises() {
-    let workout = this.props.workouts[0];
-    return WorkoutUtils.getExerciseOptions(workout).map(exerciseOption => {
+    let workout = this.props.isStartingWorkout ? this.props.workouts[0] : this.props.completedWorkout;
+    let exerciseOptions = this.props.isStartingWorkout ? WorkoutUtils.getExerciseOptions(workout) : workout.exercise.results;
+    return exerciseOptions.map(exerciseOption => {
       let altExerciseOptionId;
       if (exerciseOption.alternativeExerciseOption) {
         altExerciseOptionId = exerciseOption.alternativeExerciseOption.id;
       }
 
+      let exerciseOptionId = exerciseOption.id ? exerciseOption.id : exerciseOption.exerciseOptionId;
       let {lookupId, value, displayValue} = this._getCompletedOptionValues(exerciseOption);
 
       return {
         lookupId,
-        exerciseOptionId: exerciseOption.id,
+        exerciseOptionId,
         alternativeIsSelected: false,
         altExerciseOptionId,
         displayValue: displayValue,
@@ -104,8 +106,9 @@ const WorkoutDetailView = React.createClass({
     let value;
     let displayValue;
     if (this.props.completedWorkout) {
-      let lookup = this.props.completedWorkout.results
-          .find(result => option.id === result.exerciseOptionId ||
+      let optionId = option.id ? option.id : option.exerciseOptionId;
+      let lookup = this.props.completedWorkout.exercise.results
+          .find(result => optionId === result.exerciseOptionId ||
           option.alternativeExerciseOption && option.alternativeExerciseOption.id === result.exerciseOptionId);
 
       // if it was a rep based workout remove the value, else allow the minute/second value to be saved to {value: _}
@@ -118,7 +121,7 @@ const WorkoutDetailView = React.createClass({
 
   _exerciseOptionIsSelected(exerciseOptionId) {
     return this.state.selectedExercises
-        .find(option => option.exerciseOptionId === exerciseOptionId)
+        .find(option => option.exerciseOptionId === exerciseOptionId || option.lookupId === exerciseOptionId)
         .alternativeIsSelected;
   },
 
@@ -233,7 +236,23 @@ const WorkoutDetailView = React.createClass({
     this.setState({...this.state, selectedExercises: updatedExerciseOptions});
   },
 
+  /**
+   * Will produce an input component for a given exerciseOption. If the option is time based, it will
+   * produce a button that will popup a time (min:sec) picker, if repetition based return an input that will
+   * use the keyboard for input.
+   *
+   * If the view is in 'read-only' (!this.props.isStartinWorkout) mode, it will return a label
+   * that will be displayed rather than in Input component.
+   */
   _getInputComponent(exerciseOption) {
+    if (!this.props.isStartingWorkout) { // return the 'read-only' mode
+      return (
+          <Text style={[styles.text, {color: Colors.spacGold}]}>
+            Result: {this._getExerciseOptionDisplayValue(exerciseOption.id)}
+          </Text>
+      );
+    }
+
     if (exerciseOption.inputType === 'time') {
       return (
           <Button
@@ -306,8 +325,11 @@ const WorkoutDetailView = React.createClass({
     let exerciseOptionsCards = WorkoutUtils.getExerciseOptions(workout).map(exerciseOption => {
       let optionId = exerciseOption.id;
 
-      // create alternative exercise option view
-      let alternativeOptionView = this._createAlternativeOptionCard(exerciseOption, optionId);
+      // create alternative exercise option view (only display if it is actually doing a workout)
+      let alternativeOptionView;
+      if (this.props.isStartingWorkout) {
+        alternativeOptionView = this._createAlternativeOptionCard(exerciseOption, optionId);
+      }
 
       // get the optional description for display if found
       let exerciseOptionDescriptionText = this._getExerciseOptionDescriptionText(exerciseOption, optionId);
@@ -318,22 +340,29 @@ const WorkoutDetailView = React.createClass({
       // get the input type for the display type of the exercise option
       let inputComponent = this._getInputComponent(exerciseOption);
 
+      let radioButtonColumn;
+      if (this.props.isStartingWorkout) {
+        radioButtonColumn = (
+            <View style={[{flexDirection: 'column'}]}>
+              <View style={styles.radioButtonCentered}>
+                <RadioButton
+                    key={'radio_button_' + optionId}
+                    animation={'bounceIn'}
+                    size={14}
+                    // the user selected the primary option
+                    isSelected={!this._exerciseOptionIsSelected(exerciseOption.id)}
+                    onPress={() => this._updateSelectedExerciseOption(exerciseOption.id, false)}
+                />
+              </View>
+            </View>
+        );
+      }
+
       return (
           <Card style={styles.card} key={'card_' + optionId}>
             <Card.Body key={'card_body_' + optionId}>
               <View style={{flexDirection: 'row', marginBottom: 10}}>
-                <View style={[{flexDirection: 'column'}]}>
-                  <View style={styles.radioButtonCentered}>
-                    <RadioButton
-                        key={'radio_button_' + optionId}
-                        animation={'bounceIn'}
-                        size={14}
-                        // the user selected the primary option
-                        isSelected={!this._exerciseOptionIsSelected(exerciseOption.id)}
-                        onPress={() => this._updateSelectedExerciseOption(exerciseOption.id, false)}
-                    />
-                  </View>
-                </View>
+                {radioButtonColumn}
                 <View style={[{flexDirection: 'column'}]}>
                   <Text style={styles.workoutTitle} key={'name_' + optionId}>{exerciseOption.name}</Text>
                   <Text style={styles.text} key={'amt_' + optionId}>{exerciseOption.type} - {amount}</Text>
@@ -347,6 +376,25 @@ const WorkoutDetailView = React.createClass({
           </Card>
       );
     });
+
+    // create a 'Complete Workout' button if were currently doing a workout (will not display if view old workout)
+    let completedWorkoutButton;
+    if (this.props.isStartingWorkout) {
+      completedWorkoutButton = (
+          <View style={{marginTop: 4, marginBottom: 4}}>
+            <Button
+                text='Complete Workout'
+                raised={true}
+                overrides={{
+                  textColor: Colors.defaultButtonColor,
+                  backgroundColor: Colors.spacLightGray,
+                  rippleColor: Colors.spacMediumGray
+                }}
+                onPress={this._submitCompletedWorkout}
+            />
+          </View>
+      );
+    }
 
     return (
         <View style={styles.container} onLayout={this.getWorkout}>
@@ -362,19 +410,7 @@ const WorkoutDetailView = React.createClass({
                       style={styles.scrollView}>
             {exerciseOptionsCards}
           </ScrollView>
-
-          <View style={{marginTop: 4, marginBottom: 4}}>
-            <Button
-                text='Complete Workout'
-                raised={true}
-                overrides={{
-                  textColor: Colors.defaultButtonColor,
-                  backgroundColor: Colors.spacLightGray,
-                  rippleColor: Colors.spacMediumGray
-                }}
-                onPress={this._submitCompletedWorkout}
-            />
-          </View>
+          {completedWorkoutButton}
 
           {/* // picker for timed based results (displays minutes and seconds)*/}
           <Picker

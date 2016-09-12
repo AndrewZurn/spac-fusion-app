@@ -11,9 +11,10 @@ import {
 import {Card} from 'react-native-material-design';
 import moment from 'moment';
 import Colors from '../../utils/colors';
+import * as AuthState from '../auth/AuthState';
 import * as NavigationState from '../../modules/navigation/NavigationState';
 import * as ProfileState from './ProfileState';
-import * as AuthState from '../auth/AuthState';
+import * as WorkoutState from '../workout/WorkoutState';
 import * as WorkoutUtils from '../../utils/workoutUtils';
 
 var MessageBarAlert = require('react-native-message-bar').MessageBar;
@@ -36,7 +37,8 @@ const ProfileView = React.createClass({
     return {
       updatedHeight: null,
       updatedWeight: null,
-      updatedAge: null
+      updatedAge: null,
+      completedWorkoutsLoaded: false
     };
   },
   componentDidMount() {
@@ -46,27 +48,36 @@ const ProfileView = React.createClass({
     MessageBarManager.unregisterMessageBar();
   },
 
-  getFusionUserCompletedWorkouts() {
-    if (this.props.fusionUser) {
+  openWorkoutDetail(workout) {
+    this.props.dispatch(WorkoutState.setupForWorkoutDetails(false));
+    this.props.dispatch(WorkoutState.setCompletedWorkout(workout));
+    let title = WorkoutUtils.getName(workout);
+    this.props.dispatch(NavigationState.pushRoute({key: 'DetailsForWorkout', title}));
+  },
+
+  /* Get User Profile Fields */
+  _getFusionUserCompletedWorkouts() {
+    if (this.props.fusionUser && !this.state.completedWorkoutsLoaded) {
       this.props.dispatch(ProfileState.getFusionUserCompletedWorkouts(this.props.fusionUser.id, page));
       page++;
+      this.setState({...this.state, completedWorkoutsLoaded: true});
     }
   },
-  getFusionUserName() {
+  _getFusionUserName() {
     if (this.props.fusionUser && this.props.fusionUser.firstName && this.props.fusionUser.lastName) {
       return this.props.fusionUser.firstName + ' ' + this.props.fusionUser.lastName;
     } else {
       return '';
     }
   },
-  getFusionUserEmail() {
+  _getFusionUserEmail() {
     if (this.props.fusionUser && this.props.fusionUser.email) {
       return this.props.fusionUser.email;
     } else {
       return '';
     }
   },
-  getFusionUserHeight() {
+  _getFusionUserHeight() {
     if (this.state && this.state.updatedHeight !== null) {
       return this.state.updatedHeight.toString();
     } else if (this.props.fusionUser && this.props.fusionUser.height) {
@@ -75,7 +86,7 @@ const ProfileView = React.createClass({
       return '';
     }
   },
-  getFusionUserWeight() {
+  _getFusionUserWeight() {
     if (this.state && this.state.updatedWeight !== null) {
       return this.state.updatedWeight.toString();
     } else if (this.props.fusionUser && this.props.fusionUser.weight) {
@@ -84,7 +95,7 @@ const ProfileView = React.createClass({
       return '';
     }
   },
-  getFusionUserAge() {
+  _getFusionUserAge() {
     if (this.state && this.state.updatedAge !== null) {
       return this.state.updatedAge.toString();
     } else if (this.props.fusionUser && this.props.fusionUser.age) {
@@ -93,7 +104,7 @@ const ProfileView = React.createClass({
       return '';
     }
   },
-  getFusionUserLevel() {
+  _getFusionUserLevel() {
     if (this.props.fusionUser && this.props.fusionUser.programLevel) {
       return this.props.fusionUser.programLevel;
     } else {
@@ -112,12 +123,14 @@ const ProfileView = React.createClass({
   },
 
   render() {
-    let userName = this.getFusionUserName();
-    let userEmail = this.getFusionUserEmail();
-    let userHeight = this.getFusionUserHeight();
-    let userWeight = this.getFusionUserWeight();
-    let userAge = this.getFusionUserAge();
-    let userFusionLevel = this.getFusionUserLevel();
+    let userName = this._getFusionUserName();
+    let userEmail = this._getFusionUserEmail();
+    let userHeight = this._getFusionUserHeight();
+    let userWeight = this._getFusionUserWeight();
+    let userAge = this._getFusionUserAge();
+    let userFusionLevel = this._getFusionUserLevel();
+
+    this._getFusionUserCompletedWorkouts();
 
     let completedWorkoutsDataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     if (this.props.completedWorkouts && this.props.completedWorkouts.length > 0) {
@@ -126,7 +139,7 @@ const ProfileView = React.createClass({
     }
 
     return (
-        <View style={styles.container} onLayout={this.getFusionUser}>
+        <View style={styles.container}>
           <Card style={styles.card}>
             <Card.Body>
               <Text style={styles.title}>{userName}</Text>
@@ -208,11 +221,12 @@ const ProfileView = React.createClass({
                     let day = moment(workout.completedDate).format('dddd');
                     let date = moment(workout.completedDate).format('MMM Do');
                     return (
-                        <TouchableHighlight onPress={() => console.log('im doing it here!!!')}
+                        <TouchableHighlight onPress={() => this.openWorkoutDetail(workout)}
                                             underlayColor='#dddddd'>
                           <View style={{paddingTop: 7, paddingBottom: 7}}>
                             <Text style={styles.text} key={workout.id + '_day'}>{day} - {date}</Text>
-                            <Text style={styles.text} key={workout.id + '_name'}>{workout.exerciseName}</Text>
+                            <Text style={styles.text} key={workout.id + '_name'}>{workout.exercise.name}</Text>
+                            <Text style={styles.text} key={workout.id + '_text'}>{workout.previewText}</Text>
                           </View>
                         </TouchableHighlight>
                     );
