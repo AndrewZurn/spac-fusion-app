@@ -40,11 +40,43 @@ const WorkoutDetailView = React.createClass({
   getInitialState() {
     return {
       // should be an {exerciseOptionId, isSelected, {exerciseOptionId, isSelected}}
-      selectedExercises: this._setupSelectedExercises(),
+      selectedExercises: [],
       timedExerciseOptionIdBeingEdited: null,
-      workoutSubmitted: false
+      workoutSubmitted: false,
+      workout: null
     };
   },
+
+  componentDidMount() {
+    let workout = this.props.isStartingWorkout ? this.props.workouts[0] : this.props.completedWorkout;
+    let exerciseOptions = this.props.isStartingWorkout ?
+        WorkoutUtils.getExerciseOptions(workout) : workout.exercise.results;
+    let selectedExercises = exerciseOptions.map(exerciseOption => {
+      let altExerciseOptionId;
+      if (exerciseOption.alternativeExerciseOption) {
+        altExerciseOptionId = exerciseOption.alternativeExerciseOption.id;
+      }
+
+      let exerciseOptionId = exerciseOption.id ? exerciseOption.id : exerciseOption.exerciseOptionId;
+      let {lookupId, value, displayValue} = this._getCompletedOptionValues(exerciseOption);
+
+      return {
+        lookupId,
+        exerciseOptionId,
+        alternativeIsSelected: false,
+        altExerciseOptionId,
+        displayValue: displayValue,
+        value: value
+      };
+    });
+
+    this.setState({...this.state, workout, selectedExercises});
+  },
+
+  componentWillUnmount() {
+    this.setState(this.getInitialState());
+  },
+
   _displayLoadingIndicatorWhenLoading() {
     if (this.props.loading) {
       loaderHandler.showLoader('Loading');
@@ -67,29 +99,6 @@ const WorkoutDetailView = React.createClass({
     let workoutId = this._getWorkoutFromProps().id;
     let userId = this.props.fusionUser.id;
     this.props.dispatch(WorkoutState.saveCompletedWorkout(completedExerciseResults, userId, workoutId));
-  },
-
-  _setupSelectedExercises() {
-    let workout = this.props.isStartingWorkout ? this.props.workouts[0] : this.props.completedWorkout;
-    let exerciseOptions = this.props.isStartingWorkout ? WorkoutUtils.getExerciseOptions(workout) : workout.exercise.results;
-    return exerciseOptions.map(exerciseOption => {
-      let altExerciseOptionId;
-      if (exerciseOption.alternativeExerciseOption) {
-        altExerciseOptionId = exerciseOption.alternativeExerciseOption.id;
-      }
-
-      let exerciseOptionId = exerciseOption.id ? exerciseOption.id : exerciseOption.exerciseOptionId;
-      let {lookupId, value, displayValue} = this._getCompletedOptionValues(exerciseOption);
-
-      return {
-        lookupId,
-        exerciseOptionId,
-        alternativeIsSelected: false,
-        altExerciseOptionId,
-        displayValue: displayValue,
-        value: value
-      };
-    });
   },
 
   /**
@@ -121,7 +130,8 @@ const WorkoutDetailView = React.createClass({
 
   _exerciseOptionIsSelected(exerciseOptionId) {
     return this.state.selectedExercises
-        .find(option => option.exerciseOptionId === exerciseOptionId || option.lookupId === exerciseOptionId)
+        .find(option => option.exerciseOptionId === exerciseOptionId ||
+          option.lookupId === exerciseOptionId)
         .alternativeIsSelected;
   },
 
@@ -245,10 +255,11 @@ const WorkoutDetailView = React.createClass({
    * that will be displayed rather than in Input component.
    */
   _getInputComponent(exerciseOption) {
+    let exerciseOptionId = exerciseOption.id ? exerciseOption.id : exerciseOption.exerciseOptionId;
     if (!this.props.isStartingWorkout) { // return the 'read-only' mode
       return (
           <Text style={[styles.text, {color: Colors.spacGold}]}>
-            Result: {this._getExerciseOptionDisplayValue(exerciseOption.id)}
+            Result: {this._getExerciseOptionDisplayValue(exerciseOptionId)}
           </Text>
       );
     }
@@ -256,7 +267,7 @@ const WorkoutDetailView = React.createClass({
     if (exerciseOption.inputType === 'time') {
       return (
           <Button
-              text={this._getTimedButtonText(exerciseOption.id)}
+              text={this._getTimedButtonText(exerciseOptionId)}
               raised={true}
               overrides={{
                 textColor: Colors.defaultButtonColor,
@@ -266,7 +277,7 @@ const WorkoutDetailView = React.createClass({
               onPress={() => {
                 if (exerciseOption.inputType === 'time' && this.picker) {
                   this.picker.toggle();
-                  this.setState({...this.state, timedExerciseOptionIdBeingEdited: exerciseOption.id});
+                  this.setState({...this.state, timedExerciseOptionIdBeingEdited: exerciseOptionId});
                 }
               }}
           />
@@ -292,38 +303,34 @@ const WorkoutDetailView = React.createClass({
                 keyboardType='numeric'
                 // different displayValue when done editing to display something like (ie '50 Reps' or '200 lbs')
                 onEndEditing={() => { // done dditing, add the appender to use as the displayValue
-                  let value = this._getExerciseOption(exerciseOption.id).value;
-                  this._updateExerciseOptionValue(exerciseOption.id, value, resultsDisplayFieldAppender, true);
+                  let value = this._getExerciseOption(exerciseOptionId).value;
+                  this._updateExerciseOptionValue(exerciseOptionId, value, resultsDisplayFieldAppender, true);
                 }}
                 onFocus={() => { // reset the text box to use just the value (and not the displayValue)
-                  let value = this._getExerciseOption(exerciseOption.id).value;
-                  this._updateExerciseOptionValue(exerciseOption.id, value, value, false);
+                  let value = this._getExerciseOption(exerciseOptionId).value;
+                  this._updateExerciseOptionValue(exerciseOptionId, value, value, false);
                 }}
-                onChangeText={(text) => this._updateExerciseOptionValue(exerciseOption.id, text, '', false) }
+                onChangeText={(text) => this._updateExerciseOptionValue(exerciseOptionId, text, '', false) }
                 placeholder={resultsPlaceholderText}
                 placeholderTextColor={Colors.spacGold}
-                value={this._getExerciseOptionDisplayValue(exerciseOption.id)}/>
+                value={this._getExerciseOptionDisplayValue(exerciseOptionId)}/>
           </View>
       );
     }
-  },
-
-  _getWorkoutFromProps() {
-    return this.props.workouts && this.props.workouts.length > 0 ? this.props.workouts[0] : null;
   },
 
   render() {
     this._displayLoadingIndicatorWhenLoading();
     this._closeViewIfWorkoutSuccessfullySaved();
 
-    let workout = this._getWorkoutFromProps();
+    let workout = this.state.workout;
 
     let duration = WorkoutUtils.getDuration(workout);
     let workoutDescription = WorkoutUtils.getExerciseInstructions(workout);
 
     // create views for the selected options
     let exerciseOptionsCards = WorkoutUtils.getExerciseOptions(workout).map(exerciseOption => {
-      let optionId = exerciseOption.id;
+      let optionId = exerciseOption.id ? exerciseOption.id : exerciseOption.exerciseOptionId;
 
       // create alternative exercise option view (only display if it is actually doing a workout)
       let alternativeOptionView;
@@ -396,6 +403,7 @@ const WorkoutDetailView = React.createClass({
       );
     }
 
+    // ACTUAL RENDER RETURN
     return (
         <View style={styles.container} onLayout={this.getWorkout}>
           <Card style={styles.card}>

@@ -26,8 +26,7 @@ const GET_TODAYS_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_RESPONSE';
 const GET_COMPLETED_WORKOUT_REQUEST = 'WORKOUT_STATE/GET_COMPLETED_WORKOUT_REQUEST';
 const GET_COMPLETED_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_COMPLETED_WORKOUT_RESPONSE';
 
-const SET_COMPLETED_WORKOUT_REQUEST = 'WORKOUT_STATE/SET_COMPLETED_WORKOUT_REQUEST';
-const SET_COMPLETED_WORKOUT_RESPONSE = 'WORKOUT_STATE/SET_COMPLETED_WORKOUT_RESPONSE';
+const SET_COMPLETED_WORKOUT = 'WORKOUT_STATE/SET_COMPLETED_WORKOUT';
 
 const GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST';
 const GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE';
@@ -84,7 +83,7 @@ export function saveCompletedWorkout(completedExerciseResults, userId, workoutId
 }
 
 export function setCompletedWorkout(workout) {
-  return {type: SET_COMPLETED_WORKOUT_REQUEST, workout};
+  return {type: SET_COMPLETED_WORKOUT, workout};
 }
 
 export async function requestGetWorkouts() {
@@ -136,10 +135,6 @@ export async function requestSaveCompletedWorkout(completedExerciseResults, user
   };
 }
 
-export async function requestSetCompletedWorkout(workout) {
-  return {type: SET_COMPLETED_WORKOUT_RESPONSE, payload: workout};
-}
-
 // REDUCERS
 export default function WorkoutStateReducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -181,14 +176,12 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
     case SAVE_COMPLETED_WORKOUT_REQUEST:
       return loop(
           state.set('loading', true),
-          Effects.promise(requestSaveCompletedWorkout, action.completedExerciseResults, action.userId, action.workoutId)
+          Effects.promise(requestSaveCompletedWorkout,
+              action.completedExerciseResults, action.userId, action.workoutId)
       );
 
-    case SET_COMPLETED_WORKOUT_REQUEST:
-      return loop(
-          state.set('loading', true),
-          Effects.promise(requestSetCompletedWorkout, action.workout)
-      );
+    case SET_COMPLETED_WORKOUT:
+      return state.set('completedWorkout', action.workout);
 
     // RESPONSES
     case GET_WORKOUTS_RESPONSE:
@@ -223,11 +216,6 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
           .set('loading', false)
           .set('completedWorkout', action.payload.completedWorkout)
           .set('saveCompletedWorkoutErrors', action.payload.saveCompletedWorkoutErrors);
-
-    case SET_COMPLETED_WORKOUT_RESPONSE:
-      return state
-          .set('loading', false)
-          .set('completedWorkout', action.payload);
 
     default:
       return state;

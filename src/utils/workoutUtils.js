@@ -57,7 +57,9 @@ export function getExerciseOptions(workout) {
 
   let exerciseOptions = [];
   if (exercise && exercise.exerciseOptions) {
-    exerciseOptions = workout.exercise.exerciseOptions;
+    exerciseOptions = exercise.exerciseOptions;
+  } else if (exercise && exercise.results) {
+    exerciseOptions = exercise.results;
   }
 
   return exerciseOptions;

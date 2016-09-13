@@ -45,10 +45,8 @@ const WorkoutView = React.createClass({
 
   render() {
     let canUnlockWorkout = this.props.remainingWorkoutUnlocks > 0 || this.props.completedWorkout;
-    let unlockWorkoutButtonText;
-    if (this.props.remainingWorkoutUnlocks > 0 && !this.props.completedWorkout) {
-      unlockWorkoutButtonText = 'Start Workout';
-    } else { // this.props.completedWorkout (had previously saved workout)
+    let unlockWorkoutButtonText = 'Start Workout';
+    if (this.props.completedWorkout) {
       unlockWorkoutButtonText = 'Edit Completed Workout';
     }
 

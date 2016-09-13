@@ -49,8 +49,8 @@ const ProfileView = React.createClass({
   },
 
   openWorkoutDetail(workout) {
-    this.props.dispatch(WorkoutState.setupForWorkoutDetails(false));
     this.props.dispatch(WorkoutState.setCompletedWorkout(workout));
+    this.props.dispatch(WorkoutState.setupForWorkoutDetails(false));
     let title = WorkoutUtils.getName(workout);
     this.props.dispatch(NavigationState.pushRoute({key: 'DetailsForWorkout', title}));
   },
