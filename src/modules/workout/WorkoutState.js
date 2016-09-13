@@ -211,8 +211,9 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
           .set('remainingWorkoutUnlocks', action.payload.remainingWorkoutUnlocks);
 
     case SAVE_COMPLETED_WORKOUT_RESPONSE:
+      // don't update count if were editing the already saved workout
       return state
-          .update('remainingWorkoutUnlocks', value => value - 1)
+          .update('remainingWorkoutUnlocks', value => !state.get('completedWorkout') ? value - 1 : value)
           .set('loading', false)
           .set('completedWorkout', action.payload.completedWorkout)
           .set('saveCompletedWorkoutErrors', action.payload.saveCompletedWorkoutErrors);

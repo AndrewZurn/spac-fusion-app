@@ -96,7 +96,7 @@ const WorkoutDetailView = React.createClass({
     }
   },
   _saveCompletedWorkout(completedExerciseResults) {
-    let workoutId = this._getWorkoutFromProps().id;
+    let workoutId = this.state.workout.id;
     let userId = this.props.fusionUser.id;
     this.props.dispatch(WorkoutState.saveCompletedWorkout(completedExerciseResults, userId, workoutId));
   },
@@ -468,7 +468,7 @@ const WorkoutDetailView = React.createClass({
   },
 
   _incompletedWorkoutAlert(incompletedExerciseIds) {
-    let workout = this._getWorkoutFromProps();
+    let workout = this.state.workout();
     let incompleteExerciseNames = WorkoutUtils.getExerciseOptions(workout)
         .filter(option => incompletedExerciseIds.includes(option.id))
         .map(option => option.name)
