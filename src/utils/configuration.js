@@ -49,13 +49,9 @@ export function getConfiguration(key) {
 
 function getConfig() {
   let environment = env.ENVIRONMENT;
-  if (environment === 'prod') {
-    return prodConfig;
-  } else if (environment === 'dev') {
-    return devConfig;
-  } else if (environment === 'local') {
+  if (__DEV__) {
     return localConfig;
   } else {
-    throw new Error('Undefined configuration key: ENVIRONMENT in current environment config file.');
+    return prodConfig;
   }
 }
