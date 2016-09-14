@@ -72,7 +72,7 @@ export async function requestUpdateUser(user) {
 // Reducer
 export default function AuthStateReducer(state = initialState, action = {}) {
   var getAuth0UserId = () => {
-    if (__DEV__) {
+    if (__DEV__ && !state.get('currentUser')) {
       return _TEST_AUTH0_USER_ID;
     } else {
       return state.get('currentUser').get('userId').split('|')[1];
