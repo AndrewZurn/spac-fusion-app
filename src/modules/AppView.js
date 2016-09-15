@@ -19,14 +19,15 @@ const AppView = React.createClass({
       .then(snapshot => {
         const {dispatch} = this.props;
 
-        if (__DEV__) {
-          dispatch(SessionStateActions.initializeSessionState());
-        }
-        else if (snapshot) {
-          dispatch(SessionStateActions.resetSessionStateFromSnapshot(snapshot));
-        } else {
-          dispatch(SessionStateActions.initializeSessionState());
-        }
+        // TODO: Removed for the time being as to not cause hickups during initial release
+        // Should fix in the future to allow saving of state between app sessions.
+        // if (snapshot) {
+        //   dispatch(SessionStateActions.resetSessionStateFromSnapshot(snapshot));
+        // } else {
+        //   dispatch(SessionStateActions.initializeSessionState());
+        // }
+
+        dispatch(SessionStateActions.initializeSessionState());
 
         store.subscribe(() => {
           snapshotUtil.saveSnapshot(store.getState());

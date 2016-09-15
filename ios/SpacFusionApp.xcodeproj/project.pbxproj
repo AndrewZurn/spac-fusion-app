@@ -17,7 +17,6 @@
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
@@ -26,6 +25,16 @@
 		2B7DA8891D66A825006875FD /* spac_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B7DA8861D66A825006875FD /* spac_logo.png */; };
 		2B7DA88A1D66A825006875FD /* spac_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B7DA8871D66A825006875FD /* spac_logo@2x.png */; };
 		2B7DA88B1D66A825006875FD /* spac_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B7DA8881D66A825006875FD /* spac_logo@3x.png */; };
+		2BD0710A1D8B60DC00592F85 /* Spac-Splash-320x480.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071051D8B60DC00592F85 /* Spac-Splash-320x480.png */; };
+		2BD0710B1D8B60DC00592F85 /* Spac-Splash-640x960.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071061D8B60DC00592F85 /* Spac-Splash-640x960.png */; };
+		2BD0710C1D8B60DC00592F85 /* Spac-Splash-Portrait_640x1136.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071071D8B60DC00592F85 /* Spac-Splash-Portrait_640x1136.png */; };
+		2BD0710D1D8B60DC00592F85 /* Spac-Splash-Portrait_750x1334.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071081D8B60DC00592F85 /* Spac-Splash-Portrait_750x1334.png */; };
+		2BD0710E1D8B60DC00592F85 /* Spac-Splash-Portrait_1242x2208.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071091D8B60DC00592F85 /* Spac-Splash-Portrait_1242x2208.png */; };
+		2BD071141D8B61F900592F85 /* spac_logo_58x58.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD0710F1D8B61F900592F85 /* spac_logo_58x58.png */; };
+		2BD071151D8B61F900592F85 /* spac_logo_80x80.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071101D8B61F900592F85 /* spac_logo_80x80.png */; };
+		2BD071161D8B61F900592F85 /* spac_logo_87x87.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071111D8B61F900592F85 /* spac_logo_87x87.png */; };
+		2BD071171D8B61F900592F85 /* spac_logo_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071121D8B61F900592F85 /* spac_logo_120x120.png */; };
+		2BD071181D8B61F900592F85 /* spac_logo_180x180.png in Resources */ = {isa = PBXBuildFile; fileRef = 2BD071131D8B61F900592F85 /* spac_logo_180x180.png */; };
 		49A5E9B422974AE4B4F058E6 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F879376ABC314C538D60494B /* Entypo.ttf */; };
 		4F7294BB5A864CD590D98C8A /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7307868D4D714BEE85096B76 /* EvilIcons.ttf */; };
 		561CDFE149CE4CFBABA6DDDF /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E7E13CB12E94688BBB31361 /* Zocial.ttf */; };
@@ -148,7 +157,6 @@
 		13B07F961A680F5B00A75B9A /* SpacFusionApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpacFusionApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SpacFusionApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SpacFusionApp/AppDelegate.m; sourceTree = "<group>"; };
-		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = SpacFusionApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SpacFusionApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SpacFusionApp/main.m; sourceTree = "<group>"; };
@@ -156,6 +164,16 @@
 		2B7DA8861D66A825006875FD /* spac_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spac_logo.png; sourceTree = "<group>"; };
 		2B7DA8871D66A825006875FD /* spac_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spac_logo@2x.png"; sourceTree = "<group>"; };
 		2B7DA8881D66A825006875FD /* spac_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spac_logo@3x.png"; sourceTree = "<group>"; };
+		2BD071051D8B60DC00592F85 /* Spac-Splash-320x480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Spac-Splash-320x480.png"; sourceTree = "<group>"; };
+		2BD071061D8B60DC00592F85 /* Spac-Splash-640x960.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Spac-Splash-640x960.png"; sourceTree = "<group>"; };
+		2BD071071D8B60DC00592F85 /* Spac-Splash-Portrait_640x1136.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Spac-Splash-Portrait_640x1136.png"; sourceTree = "<group>"; };
+		2BD071081D8B60DC00592F85 /* Spac-Splash-Portrait_750x1334.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Spac-Splash-Portrait_750x1334.png"; sourceTree = "<group>"; };
+		2BD071091D8B60DC00592F85 /* Spac-Splash-Portrait_1242x2208.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Spac-Splash-Portrait_1242x2208.png"; sourceTree = "<group>"; };
+		2BD0710F1D8B61F900592F85 /* spac_logo_58x58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spac_logo_58x58.png; sourceTree = "<group>"; };
+		2BD071101D8B61F900592F85 /* spac_logo_80x80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spac_logo_80x80.png; sourceTree = "<group>"; };
+		2BD071111D8B61F900592F85 /* spac_logo_87x87.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spac_logo_87x87.png; sourceTree = "<group>"; };
+		2BD071121D8B61F900592F85 /* spac_logo_120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spac_logo_120x120.png; sourceTree = "<group>"; };
+		2BD071131D8B61F900592F85 /* spac_logo_180x180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spac_logo_180x180.png; sourceTree = "<group>"; };
 		2E83FC24DFFB4C3184F670CF /* libA0RNLock.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libA0RNLock.a; sourceTree = "<group>"; };
 		4A0096911F18481CAB91C2C9 /* A0RNLock.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = A0RNLock.xcodeproj; path = "../node_modules/react-native-lock/ios/A0RNLock.xcodeproj"; sourceTree = "<group>"; };
 		4E7E13CB12E94688BBB31361 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -297,7 +315,6 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = SpacFusionApp;
@@ -373,6 +390,16 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				2BD0710F1D8B61F900592F85 /* spac_logo_58x58.png */,
+				2BD071101D8B61F900592F85 /* spac_logo_80x80.png */,
+				2BD071111D8B61F900592F85 /* spac_logo_87x87.png */,
+				2BD071121D8B61F900592F85 /* spac_logo_120x120.png */,
+				2BD071131D8B61F900592F85 /* spac_logo_180x180.png */,
+				2BD071051D8B60DC00592F85 /* Spac-Splash-320x480.png */,
+				2BD071061D8B60DC00592F85 /* Spac-Splash-640x960.png */,
+				2BD071071D8B60DC00592F85 /* Spac-Splash-Portrait_640x1136.png */,
+				2BD071081D8B60DC00592F85 /* Spac-Splash-Portrait_750x1334.png */,
+				2BD071091D8B60DC00592F85 /* Spac-Splash-Portrait_1242x2208.png */,
 				2B7DA8861D66A825006875FD /* spac_logo.png */,
 				2B7DA8871D66A825006875FD /* spac_logo@2x.png */,
 				2B7DA8881D66A825006875FD /* spac_logo@3x.png */,
@@ -637,18 +664,27 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BD071181D8B61F900592F85 /* spac_logo_180x180.png in Resources */,
 				2B7DA88A1D66A825006875FD /* spac_logo@2x.png in Resources */,
+				2BD0710C1D8B60DC00592F85 /* Spac-Splash-Portrait_640x1136.png in Resources */,
+				2BD071171D8B61F900592F85 /* spac_logo_120x120.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				2BD071151D8B61F900592F85 /* spac_logo_80x80.png in Resources */,
 				2B7DA88B1D66A825006875FD /* spac_logo@3x.png in Resources */,
-				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				2B7DA8891D66A825006875FD /* spac_logo.png in Resources */,
 				49A5E9B422974AE4B4F058E6 /* Entypo.ttf in Resources */,
 				4F7294BB5A864CD590D98C8A /* EvilIcons.ttf in Resources */,
 				1BC434708B924EABAA4451E7 /* FontAwesome.ttf in Resources */,
 				64364D34F5D34909986DE939 /* Foundation.ttf in Resources */,
+				2BD0710D1D8B60DC00592F85 /* Spac-Splash-Portrait_750x1334.png in Resources */,
+				2BD071141D8B61F900592F85 /* spac_logo_58x58.png in Resources */,
 				6FC4BFD3FB6049EFAF9640D6 /* Ionicons.ttf in Resources */,
 				BB6A445393D64013A01148DF /* MaterialIcons.ttf in Resources */,
 				C9134D5D1B1842A581AE5E38 /* Octicons.ttf in Resources */,
+				2BD0710B1D8B60DC00592F85 /* Spac-Splash-640x960.png in Resources */,
+				2BD0710E1D8B60DC00592F85 /* Spac-Splash-Portrait_1242x2208.png in Resources */,
+				2BD0710A1D8B60DC00592F85 /* Spac-Splash-320x480.png in Resources */,
+				2BD071161D8B61F900592F85 /* spac_logo_87x87.png in Resources */,
 				561CDFE149CE4CFBABA6DDDF /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -745,18 +781,6 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				13B07FB21A68108700A75B9A /* Base */,
-			);
-			name = LaunchScreen.xib;
-			path = SpacFusionApp;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -802,6 +826,7 @@
 			baseConfigurationReference = A7328F30437235EA55E6061C /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEAD_CODE_STRIPPING = NO;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -817,6 +842,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.zalude.spac.fusion.SpacFusionApp;
 				PRODUCT_NAME = SpacFusionApp;
 			};
 			name = Debug;
@@ -826,6 +852,7 @@
 			baseConfigurationReference = 9F3B217B86B825CE9BA317E2 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -840,6 +867,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.zalude.spac.fusion.SpacFusionApp;
 				PRODUCT_NAME = SpacFusionApp;
 			};
 			name = Release;
