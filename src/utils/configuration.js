@@ -49,7 +49,7 @@ export function getConfiguration(key) {
 
 function getConfig() {
   let environment = env.ENVIRONMENT;
-  if (__DEV__) {
+  if (!__DEV__) {
     return localConfig;
   } else {
     return prodConfig;
