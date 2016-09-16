@@ -197,7 +197,7 @@ const WorkoutDetailView = React.createClass({
                 />
               </View>
             </View>
-            <View style={[{flexDirection: 'column'}]}>
+            <View style={[{flexDirection: 'column'}, styles.columnWrap]}>
               <Text style={styles.altTitle} key={'name_' + altId}>Alternative: {alternativeOption.name}</Text>
               <Text style={styles.text}
                     key={'amt_' + altId}>{alternativeOption.type} - {amount}</Text>
@@ -370,7 +370,7 @@ const WorkoutDetailView = React.createClass({
             <Card.Body key={'card_body_' + optionId}>
               <View style={{flexDirection: 'row', marginBottom: 10}}>
                 {radioButtonColumn}
-                <View style={[{flexDirection: 'column'}]}>
+                <View style={[{flexDirection: 'column'}, styles.columnWrap]}>
                   <Text style={styles.workoutTitle} key={'name_' + optionId}>{exerciseOption.name}</Text>
                   <Text style={styles.text} key={'amt_' + optionId}>{exerciseOption.type} - {amount}</Text>
                   {exerciseOptionDescriptionText}
@@ -545,6 +545,7 @@ const styles = StyleSheet.create({
     fontFamily: Colors.textStyle
   },
   altTitle: {
+    flexWrap: 'wrap',
     justifyContent: 'center',
     fontSize: Colors.textSize,
     color: Colors.spacGold,
@@ -552,6 +553,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: Colors.textSize,
+    flexWrap: 'wrap',
     color: Colors.spacCream,
     fontFamily: Colors.textStyle
   },
@@ -573,6 +575,10 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1
+  },
+  columnWrap: {
+    flexWrap: 'wrap',
+    flex: 0.8
   }
 });
 
