@@ -7,6 +7,15 @@ import WorkoutDetailsViewContainer from './workout/workoutDetails/WorkoutDetails
 import ScheduleViewContainer from './schedule/ScheduleViewContainer';
 import ProfileViewContainer from './profile/ProfileViewContainer';
 
+export const HOME_INDEX = 0;
+export const WORKOUT_INDEX = 1;
+export const SCHEDULE_INDEX = 2;
+export const PROFILE_INDEX = 3;
+
+export function isInView(state, index) {
+  return state.getIn(['navigationState', 'index']) === index;
+}
+
 /**
  * AppRouter is responsible for mapping a navigator scene to a view
  */
