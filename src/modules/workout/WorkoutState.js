@@ -10,26 +10,30 @@ const initialState = Map({
   isStartingWorkout: false,
   completedWorkout: null,
   saveCompletedWorkoutErrors: [],
-  loading: false
+  loading: false,
+  error: null // should have fields 'type' and 'message'
 });
 
+
 // Actions
+const ERROR_ACKNOWLEDGED = 'WORKOUT_STATE/ERROR_ACKNOWLEDGED';
+
 const GET_WORKOUTS_REQUEST = 'WORKOUT_STATE/GET_WORKOUTS_REQUEST';
 const GET_WORKOUTS_RESPONSE = 'WORKOUT_STATE/GET_WORKOUTS_RESPONSE';
 
 const GET_WORKOUT_REQUEST = 'WORKOUT_STATE/GET_WORKOUT_REQUEST';
-const GET_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_WORKOUT_RESPONSE';
+export const GET_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_WORKOUT_RESPONSE';
 
 const GET_TODAYS_WORKOUT_REQUEST = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_REQUEST';
-const GET_TODAYS_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_RESPONSE';
+export const GET_TODAYS_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_TODAYS_WORKOUT_RESPONSE';
 
 const GET_COMPLETED_WORKOUT_REQUEST = 'WORKOUT_STATE/GET_COMPLETED_WORKOUT_REQUEST';
-const GET_COMPLETED_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_COMPLETED_WORKOUT_RESPONSE';
+export const GET_COMPLETED_WORKOUT_RESPONSE = 'WORKOUT_STATE/GET_COMPLETED_WORKOUT_RESPONSE';
 
 const SET_COMPLETED_WORKOUT = 'WORKOUT_STATE/SET_COMPLETED_WORKOUT';
 
 const GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_REQUEST';
-const GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE';
+export const GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE = 'WORKOUT_STATE/GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE';
 
 const SETUP_FOR_WORKOUT_DETAILS = 'WORKOUT_STATE/SETUP_FOR_WORKOUT_DETAILS';
 
@@ -37,8 +41,8 @@ const SAVE_COMPLETED_WORKOUT_REQUEST = 'WORKOUT_STATE/SAVE_COMPLETED_WORKOUT_REQ
 const SAVE_COMPLETED_WORKOUT_RESPONSE = 'WORKOUT_STATE/SAVE_COMPLETED_WORKOUT_RESPONSE';
 
 // ACTION STATE FUNCTIONS
-export function getWorkouts() {
-  return {type: GET_WORKOUTS_REQUEST};
+export function errorAcknowledged() {
+  return {type: ERROR_ACKNOWLEDGED};
 }
 
 export function getWorkout(id) {
@@ -139,7 +143,7 @@ export async function requestSaveCompletedWorkout(completedExerciseResults, user
 export default function WorkoutStateReducer(state = initialState, action = {}) {
   switch (action.type) {
 
-    // REQUESTS
+      // REQUESTS
     case GET_WORKOUTS_REQUEST:
       return loop(
           state.set('loading', true),
@@ -184,31 +188,72 @@ export default function WorkoutStateReducer(state = initialState, action = {}) {
       return state.set('completedWorkout', action.workout);
 
     // RESPONSES
+    case ERROR_ACKNOWLEDGED:
+      return state.set('error', null);
+
     case GET_WORKOUTS_RESPONSE:
       return state
           .set('loading', false)
           .set('workouts', action.payload);
 
     case GET_WORKOUT_RESPONSE:
-      return state
-          .set('loading', false)
-          .set('workouts', [action.payload]);
+      if (action.payload && action.payload.id) {
+        return state
+            .set('loading', false)
+            .set('workouts', [action.payload]);
+      } else {
+        return state
+            .set('loading', false)
+            .set('error', {
+              type: GET_WORKOUT_RESPONSE,
+              message: 'Could not find workout. Please try again later.'
+            });
+      }
 
     case GET_TODAYS_WORKOUT_RESPONSE:
-      return loop(
-          state.set('workouts', [action.payload]),
-          Effects.promise(requestGetCompletedWorkout, action.userId, action.payload.id)
-      );
+      if (action.payload && action.payload.id) {
+        return loop(
+            state.set('workouts', [action.payload]),
+            Effects.promise(requestGetCompletedWorkout, action.userId, action.payload.id)
+        );
+      } else {
+        return state
+            .set('loading', false)
+            .set('error', {
+              type: GET_TODAYS_WORKOUT_RESPONSE,
+              message: 'Could not find today\'s workout. Please try again later.'
+            });
+      }
 
     case GET_COMPLETED_WORKOUT_RESPONSE:
-      return state
-          .set('loading', false)
-          .set('completedWorkout', action.payload.completedWorkout);
+      if (action.payload && action.payload.completedWorkout && action.payload.completedWorkout.id) {
+        return state
+            .set('loading', false)
+            .set('completedWorkout', action.payload.completedWorkout);
+      } else {
+        return state
+            .set('loading', false)
+            .set('error', {
+              type: GET_COMPLETED_WORKOUT_RESPONSE,
+              message: 'Could not find information on completed workout.'
+            });
+      }
 
     case GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE:
-      return state
-          .set('loading', false)
-          .set('remainingWorkoutUnlocks', action.payload.remainingWorkoutUnlocks);
+      if (action.payload && action.payload.remainingWorkoutUnlocks) {
+        return state
+            .set('loading', false)
+            .set('remainingWorkoutUnlocks', action.payload.remainingWorkoutUnlocks);
+      } else {
+        return state
+            .set('loading', false)
+            .set('remainingWorkoutUnlocks', 0)
+            .set('error', {
+              type: GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE,
+              message: 'Could not retrieve information on remaining workout unlocks for the week.' +
+              ' Please try again later.'
+            });
+      }
 
     case SAVE_COMPLETED_WORKOUT_RESPONSE:
       // don't update count if were editing the already saved workout

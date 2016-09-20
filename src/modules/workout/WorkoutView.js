@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import {
+    Alert,
     View,
     StyleSheet,
     Text
@@ -9,6 +10,7 @@ import * as NavigationState from '../../modules/navigation/NavigationState';
 import WorkoutCard from '../../components/WorkoutCard';
 import * as WorkoutState from './WorkoutState';
 import * as WorkoutUtils from '../../utils/workoutUtils';
+import Immutable from 'immutable';
 
 /**
  * @TODO remove this module in a live application.
@@ -20,7 +22,36 @@ const WorkoutView = React.createClass({
     fusionUser: PropTypes.object.isRequired,
     completedWorkout: PropTypes.object,
     didSaveCompletedWorkout: PropTypes.bool.isRequired,
+    error: PropTypes.object,
+    isInView: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
+  },
+  getInitialState() {
+    return {currentDisplayedErrors: []};
+  },
+  _handlerStateErrors() {
+    if (this.props.isInView &&
+        this.props.error && this.props.error.type && this.props.error.message) {
+      let errorType = this.props.error.type;
+      if (errorType === WorkoutState.GET_TODAYS_WORKOUT_RESPONSE ||
+          errorType === WorkoutState.GET_USER_REMAINING_WORKOUT_UNLOCKS_RESPONSE ||
+          errorType === WorkoutState.GET_WORKOUT_RESPONSE) {
+        this.props.dispatch(WorkoutState.errorAcknowledged());
+        this._displayError(this.props.error.message);
+      }
+    }
+  },
+  _displayError(message) {
+    var displayErrors = Immutable.fromJS(this.state.currentDisplayedErrors);
+    if (!displayErrors.includes(message)) {
+      Alert.alert(
+          'Workout Error',
+          this.props.error.message,
+          [{text: 'OK',
+            onPress: () => this.setState({...this.state, currentDisplayedErrors: displayErrors.pop(message)})}]
+      );
+      this.setState({...this.state, currentDisplayedErrors: displayErrors.push(message)});
+    }
   },
   _getTodaysWorkout() {
     if (this.props.fusionUser) {
@@ -44,6 +75,8 @@ const WorkoutView = React.createClass({
   },
 
   render() {
+    this._handlerStateErrors();
+
     let canUnlockWorkout = this.props.remainingWorkoutUnlocks > 0 || this.props.completedWorkout;
     let unlockWorkoutButtonText = 'Start Workout';
     if (this.props.completedWorkout) {
